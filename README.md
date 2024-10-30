@@ -1,4 +1,4 @@
-# isa_projet
+# isa_project
 Final project for COMP4537 - ISA
 
 # to start venv, do python -m venv venv first
