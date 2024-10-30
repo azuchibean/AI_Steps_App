@@ -1,5 +1,5 @@
-# comp4968final_project
-Final project for COMP4968: Serverless computing and microservices
+# isa_projet
+Final project for COMP4537 - ISA
 
 # to start venv, do python -m venv venv first
 venv\Scripts\activate to activate venv when in backend, deactivate when done
