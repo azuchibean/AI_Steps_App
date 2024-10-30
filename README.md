@@ -2,11 +2,11 @@
 Final project for COMP4537 - ISA
 
 # to start venv, do python -m venv venv first
-venv\Scripts\activate to activate venv when in backend, deactivate when done
+venv\Scripts\activate to activate venv when in backend, deactivate when done ||
 activating will let you install dependencies only in venv file and not globally on computer
 
-# for when 
-pip freeze > requirements.txt when exporting to digitalocean for dependencies
+# for when you are cd in backend
+pip freeze > requirements.txt when exporting to digitalocean for dependencies ||
 pip install -r requirements.txt (do while in venv, installs all dependencies in requirements.txt)
 
 # required libraries:
