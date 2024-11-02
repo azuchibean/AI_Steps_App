@@ -138,8 +138,10 @@ async def login(request: LoginRequest):
 
     return {"access_token": access_token, "token_type": "bearer"}
 
-
-
+@app.get("/verify-token")
+async def verify_token(token: str = Depends(oauth2_scheme)):
+    # If the token is valid, this function will return the user; otherwise, it will raise an error.
+    return {"message": "Token is valid."}
 
 
 #db is tested here, will be put in api not in main later

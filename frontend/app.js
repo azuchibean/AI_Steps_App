@@ -83,3 +83,4 @@ if (registerForm) {  // Only add event listener if the registration form exists 
         }
     });
 }
+
