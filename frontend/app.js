@@ -23,17 +23,25 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         // });
 
         // const data = await response.json();
-        
+
         // if (!response.ok) throw new Error(data.detail || "Login failed");
 
         // loginMessage.style.color = "green";
         // loginMessage.textContent = "Login successful!";
-        
+
+        // try this first... will change to backend fxn after authentication is implemented
+        const isAdmin = (email === "admin@example.com");
+
         // Redirect to another page or perform other actions here
-        setTimeout(() => {
-            window.location.href = "landing.html"; // Example redirect after login
-        }, 1000);
-        
+        if (isAdmin) {
+            window.location.href = "admin.html";
+        } else {
+            window.location.href = "landing.html";
+        }
+
+        // redirect to admin page 
+
+
     } catch (error) {
         loginMessage.style.color = "red";
         loginMessage.textContent = error.message;
@@ -61,17 +69,17 @@ document.getElementById("registerForm").addEventListener("submit", async functio
         });
 
         const data = await response.json();
-        
+
         if (!response.ok) throw new Error(data.detail || "Registration failed");
 
         registerMessage.style.color = "green";
         registerMessage.textContent = "Registration successful!";
-        
+
         // Redirect to login page or perform other actions here
         // setTimeout(() => {
         //     window.location.href = "login.html"; // Redirect to login page after registration
         // }, 1000);
-        
+
     } catch (error) {
         registerMessage.style.color = "red";
         registerMessage.textContent = error.message;
