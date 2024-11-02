@@ -25,17 +25,20 @@ if (loginForm) {  // Only add event listener if the login form exists on the pag
             });
 
             const data = await response.json();
-            
+
             if (!response.ok) throw new Error(data.detail || "Login failed");
             localStorage.setItem("token", data.access_token);  // Save the token
             loginMessage.style.color = "green";
             loginMessage.textContent = "Login successful!";
-            
-            // Redirect to another page or perform other actions here
-            setTimeout(() => {
-                window.location.href = "landing.html"; 
-            }, 500);
-            
+
+            // Redirect to another page or perform other actions here     
+            if (data.isAdmin) {  
+                window.location.href = "admin.html";  // Redirect to admin page
+            } else {
+                window.location.href = "landing.html"; // Redirect to landing page
+            }
+
+
         } catch (error) {
             loginMessage.style.color = "red";
             loginMessage.textContent = error.message;
@@ -66,17 +69,17 @@ if (registerForm) {  // Only add event listener if the registration form exists 
             });
 
             const data = await response.json();
-            
+
             if (!response.ok) throw new Error(data.detail || "Registration failed");
 
             registerMessage.style.color = "green";
             registerMessage.textContent = "Registration successful!";
-            
+
             // Redirect to login page after successful registration
             setTimeout(() => {
                 window.location.href = "login.html";
             }, 500);
-            
+
         } catch (error) {
             registerMessage.style.color = "red";
             registerMessage.textContent = error.message;

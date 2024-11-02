@@ -8,7 +8,7 @@ from utils.auth_utils import hash_password, verify_password, create_access_token
 from pydantic import BaseModel
 from datetime import timedelta
 import bcrypt
-
+from fastapi.responses import RedirectResponse
 
 app = FastAPI()
 
@@ -136,13 +136,16 @@ async def login(request: LoginRequest):
         data={"sub": user["email"]}, expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    # Check the is_admin field (assumes it's stored as a boolean in your database)
+    is_admin = bool(user.get("is_admin"))  # Convert the TINYINT(1) to a boolean
 
+    return {"access_token": access_token, "token_type": "bearer", "isAdmin": is_admin }
+
+# Verify Token Endpoint
 @app.get("/verify-token")
-async def verify_token(token: str = Depends(oauth2_scheme)):
-    # If the token is valid, this function will return the user; otherwise, it will raise an error.
-    return {"message": "Token is valid."}
-
+async def verify_token(current_user: dict = Depends(get_current_user)):
+    # If the user is successfully verified, return a success response
+    return {"message": "Token is valid", "user": current_user["email"]}
 
 #db is tested here, will be put in api not in main later
 def main():

@@ -4,13 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body {
-            display: none;
-            /* Hide content initially */
+    <title>Landing</title>
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:8000";  // Your backend API URL
+
+        // Immediately Invoked Function Expression (IIFE) to run before content loads
+        (async () => {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                // If there's no token, redirect to the login page
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                // Validate the token with the server
+                const response = await fetch(`${API_BASE_URL}/verify-token`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    // If token validation fails, redirect to the login page
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // Token is valid, proceed to load the landing page content
+                loadLandingPageContent();  // Call a function to load the landing page content
+
+            } catch (error) {
+                console.error("Error validating token:", error);
+                // In case of an error, redirect to the login page
+                window.location.href = "login.html";
+            }
+        })(); // IIFE ends here
+
+        // Example function to load content for the landing page
+        function loadLandingPageContent() {
+            // Implement your logic to load and display landing page content here
+            console.log("Landing page content loaded successfully!");
         }
-    </style>
+    </script>
 </head>
 
 <body>
