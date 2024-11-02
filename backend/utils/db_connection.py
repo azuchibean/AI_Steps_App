@@ -32,9 +32,12 @@ def create_user_table(connection):
         create_table_query = """
         CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
+        first_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
-        password VARCHAR(20) NOT NULL
+        password_hash VARCHAR(255) NOT NULL,
+        free_api_calls_remaining INT DEFAULT 20,
+        total_api_calls INT DEFAULT 0,
+        is_admin BOOLEAN DEFAULT FALSE
         )
         """
         cursor.execute(create_table_query)
@@ -46,15 +49,15 @@ def create_user_table(connection):
     finally:
         cursor.close() 
 
-def insert_user(connection, name, email, password):
+def insert_user(connection, first_name, email, password_hash):
     """Inserts a new user into the users table."""
     cursor = connection.cursor()
     try:
         # can change for specific requirements
         insert_user_query = """
-        INSERT INTO users (name, email, password) VALUES (%s, %s, %s)
+        INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)
         """
-        cursor.execute(insert_user_query, (name, email, password))
+        cursor.execute(insert_user_query, (first_name, email, password_hash))
         connection.commit()
         print("User inserted successfully.")
     except Error as e:
