@@ -19,6 +19,10 @@ pip install -r requirements.txt (do while in venv, installs all dependencies in 
 # to start api server
 uvicorn app:app --reload 
 
+# to start frontend (in the frontend directory)
+npm install
+npm run frontend
+
 # required libraries:
 transformers - for huggingface access
 
