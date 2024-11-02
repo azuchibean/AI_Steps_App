@@ -66,6 +66,20 @@ def insert_user(connection, first_name, email, password_hash):
     finally:
         cursor.close() 
 
+def get_user_by_email(connection, email):
+    """Retrieve a user from the database by email."""
+    cursor = connection.cursor(dictionary=True)
+    try:
+        query = "SELECT * FROM users WHERE email = %s"
+        cursor.execute(query, (email,))
+        user = cursor.fetchone()
+        return user
+    except Error as e:
+        print("Error retrieving user by email:", e)
+        return None
+    finally:
+        cursor.close()
+
 def close_db_connection(connection):
     """Closes the database connection."""
     if connection.is_connected():
