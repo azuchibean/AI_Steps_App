@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        // Authentication check on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                // Redirect to the login page if no token is found
+                window.location.href = "login.html";
+            }
+        });
+    </script>
 </head>
 <body>
     <h1>Welcome to the landing page </h1>
