@@ -14,25 +14,25 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     loginMessage.textContent = "Logging in...";
 
     try {
-        const response = await fetch(`${API_BASE_URL}/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+        // const response = await fetch(`${API_BASE_URL}/login`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({ email, password }),
+        // });
 
-        const data = await response.json();
+        // const data = await response.json();
         
-        if (!response.ok) throw new Error(data.detail || "Login failed");
+        // if (!response.ok) throw new Error(data.detail || "Login failed");
 
-        loginMessage.style.color = "green";
-        loginMessage.textContent = "Login successful!";
+        // loginMessage.style.color = "green";
+        // loginMessage.textContent = "Login successful!";
         
         // Redirect to another page or perform other actions here
-        // setTimeout(() => {
-        //     window.location.href = "dashboard.html"; // Example redirect after login
-        // }, 1000);
+        setTimeout(() => {
+            window.location.href = "landing.html"; // Example redirect after login
+        }, 1000);
         
     } catch (error) {
         loginMessage.style.color = "red";
