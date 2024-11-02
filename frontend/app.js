@@ -27,14 +27,14 @@ if (loginForm) {  // Only add event listener if the login form exists on the pag
             const data = await response.json();
             
             if (!response.ok) throw new Error(data.detail || "Login failed");
-
+            localStorage.setItem("token", data.access_token);  // Save the token
             loginMessage.style.color = "green";
             loginMessage.textContent = "Login successful!";
             
             // Redirect to another page or perform other actions here
             setTimeout(() => {
-                window.location.href = "dashboard.html"; // Example redirect after login
-            }, 1000);
+                window.location.href = "landing.html"; 
+            }, 500);
             
         } catch (error) {
             loginMessage.style.color = "red";
@@ -75,7 +75,7 @@ if (registerForm) {  // Only add event listener if the registration form exists 
             // Redirect to login page after successful registration
             setTimeout(() => {
                 window.location.href = "login.html";
-            }, 1000);
+            }, 500);
             
         } catch (error) {
             registerMessage.style.color = "red";
