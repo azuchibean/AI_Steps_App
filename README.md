@@ -17,7 +17,7 @@ pip freeze > requirements.txt when exporting to digitalocean for dependencies ||
 pip install -r requirements.txt (do while in venv, installs all dependencies in requirements.txt)
 
 # to start api server
-uvicorn app:app --reload 
+uvicorn main:app --reload 
 
 # to start frontend (in the frontend directory)
 npm install
