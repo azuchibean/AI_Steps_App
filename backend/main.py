@@ -3,13 +3,12 @@ from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
+from model_handler import find_top_destinations
+from utils.models.models import RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
-from pydantic import BaseModel
 from datetime import timedelta
-import bcrypt
 import requests 
-from fastapi.responses import RedirectResponse
 
 app = FastAPI()
 
@@ -21,7 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Define the OAuth2PasswordBearer scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -55,20 +53,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
     return user
 
-
-
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to my FastAPI application!"}
-
-
-
 # Register endpoint
-class RegisterRequest(BaseModel):
-    first_name: str
-    email: str
-    password: str
-
 @app.post("/register")
 async def register_user(request: RegisterRequest):
      # Connect to the database
@@ -101,10 +86,6 @@ async def register_user(request: RegisterRequest):
 
 
 # Login endpoint
-class LoginRequest(BaseModel):
-    email: str
-    password: str
-
 @app.post("/login")
 async def login(request: LoginRequest):
     # Connect to the database
@@ -115,16 +96,9 @@ async def login(request: LoginRequest):
     # Retrieve the user by email
     user = get_user_by_email(db, request.email)
     close_db_connection(db)
-    
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
 
-    # Verify password
-    if not verify_password(request.password, user["password_hash"]):
+    # Verify if user exists or if password doesn't match
+    if not user or not verify_password(request.password, user["password_hash"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
@@ -137,32 +111,20 @@ async def login(request: LoginRequest):
         data={"sub": user["email"]}, expires_delta=access_token_expires
     )
 
-     # Check the is_admin field (assumes it's stored as a boolean in your database)
-    is_admin = bool(user.get("is_admin"))  # Convert the TINYINT(1) to a boolean
+    return {"access_token": access_token, "token_type": "bearer", "isAdmin": user.get("is_admin") }
 
-    return {"access_token": access_token, "token_type": "bearer", "isAdmin": is_admin }
 
-# Verify Token Endpoint
+# Verify token endpoint
 @app.get("/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
-    # If the user is successfully verified, return a success response
-    is_admin = current_user.get("is_admin", 0)  
-
-# Retrieve additional API call information
-    free_api_calls_remaining = current_user.get("free_api_calls_remaining", 0)  
-    total_api_calls = current_user.get("total_api_calls", 0) 
-    first_name = current_user.get("first_name", "")
-
     return {
         "message": "Token is valid",
         "user": current_user["email"],
-        "isAdmin": bool(is_admin),
-        "free_api_calls_remaining": free_api_calls_remaining,
-        "total_api_calls": total_api_calls,
-        "first_name": first_name
+        "isAdmin": current_user.get("is_admin", 0),  
+        "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
+        "total_api_calls": current_user.get("total_api_calls", 0),
+        "first_name": current_user.get("first_name", "")
     }
-
-
 
 
 def send_reset_email(email: str, reset_link: str):
@@ -179,8 +141,6 @@ def send_reset_email(email: str, reset_link: str):
     print(response.status_code, response.text)  # Log the response to check for issues
 
 
-class PasswordResetRequest(BaseModel):
-    email: str
 
 @app.post("/request-password-reset")
 async def request_password_reset(request: PasswordResetRequest, background_tasks: BackgroundTasks):
@@ -202,10 +162,6 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
 
     return {"message": "Password reset link has been sent to your email"}
 
-
-class PasswordReset(BaseModel):
-    token: str
-    new_password: str
 
 @app.post("/reset-password")
 async def reset_password(request: PasswordReset):
@@ -231,10 +187,11 @@ async def reset_password(request: PasswordReset):
 
     return {"message": "Password has been reset successfully"}
 
+@app.get("/llm_test")
+async def llm_message():
+    return find_top_destinations
 
-    
-
-#db is tested here, will be put in api not in main later
+#Creates user table if it doesn't exist
 def main():
     db = get_db_connection()
     if db is None:
@@ -242,17 +199,13 @@ def main():
         return
 
     try:
-        # Create a cursor and execute queries
         create_user_table(db)
-
-        # Note: Enclose string values in quotes
-        insert_user(db, "Victor", "victors@gmail.com", "testpass")
 
     except Error as e:
         print(f"The error '{e}' occurred")
 
     finally:
-        close_db_connection(db)  # Ensure the database connection is closed
+        close_db_connection(db) 
 
 
 if __name__ == "__main__":
