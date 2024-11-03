@@ -145,7 +145,12 @@ async def login(request: LoginRequest):
 @app.get("/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
     # If the user is successfully verified, return a success response
-    return {"message": "Token is valid", "user": current_user["email"]}
+    is_admin = current_user.get("is_admin", 0)  
+    return {
+        "message": "Token is valid",
+        "user": current_user["email"],
+        "isAdmin": bool(is_admin)
+    }
 
 #db is tested here, will be put in api not in main later
 def main():

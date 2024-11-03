@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
+    <link rel="stylesheet" href="style.css">
     <script>
         const API_BASE_URL = "http://127.0.0.1:8000";  // Your backend API URL
 
-        // Immediately Invoked Function Expression (IIFE) to run before content loads
+        // Immediately Invoked Function Expression (IIFE)
         (async () => {
             const token = localStorage.getItem("token");
 
             if (!token) {
-                // If there's no token, redirect to the login page
                 window.location.href = "login.html";
                 return;
             }
 
             try {
-                // Validate the token with the server
                 const response = await fetch(`${API_BASE_URL}/verify-token`, {
                     method: "GET",
                     headers: {
@@ -27,27 +27,41 @@
                 });
 
                 if (!response.ok) {
-                    // If token validation fails, redirect to the login page
                     window.location.href = "login.html";
                     return;
                 }
 
-                // Token is valid, proceed to load the admin page content
-                loadAdminPageContent();  // Call a function to load the admin page content
+                const data = await response.json();
+
+                if (!data.isAdmin) {  
+                    window.location.href = "landing.html";
+                    return;
+                }
+
+                // Hide loading message and show admin content
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("adminContent").style.display = "block";
+
+
+                loadAdminPageContent();  // Load the admin page content
 
             } catch (error) {
                 console.error("Error validating token:", error);
-                // In case of an error, redirect to the login page
                 window.location.href = "login.html";
             }
         })(); // IIFE ends here
 
-        // Example function to load content for the admin page
         function loadAdminPageContent() {
         }
     </script>
+
 </head>
+
 <body>
-    <h1>Welcome to the admin page</h1>
+    <div id="loading"></div>
+    <div id="adminContent">
+        <h1>Welcome to the admin page</h1>
+    </div>
 </body>
+
 </html>
