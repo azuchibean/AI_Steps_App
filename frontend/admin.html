@@ -42,17 +42,12 @@
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("adminContent").style.display = "block";
 
-
-                loadAdminPageContent();  // Load the admin page content
-
             } catch (error) {
                 console.error("Error validating token:", error);
                 window.location.href = "login.html";
             }
         })(); // IIFE ends here
 
-        function loadAdminPageContent() {
-        }
     </script>
 
 </head>

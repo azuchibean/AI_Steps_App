@@ -146,10 +146,19 @@ async def login(request: LoginRequest):
 async def verify_token(current_user: dict = Depends(get_current_user)):
     # If the user is successfully verified, return a success response
     is_admin = current_user.get("is_admin", 0)  
+
+# Retrieve additional API call information
+    free_api_calls_remaining = current_user.get("free_api_calls_remaining", 0)  
+    total_api_calls = current_user.get("total_api_calls", 0) 
+    first_name = current_user.get("first_name", "")
+
     return {
         "message": "Token is valid",
         "user": current_user["email"],
-        "isAdmin": bool(is_admin)
+        "isAdmin": bool(is_admin),
+        "free_api_calls_remaining": free_api_calls_remaining,
+        "total_api_calls": total_api_calls,
+        "first_name": first_name
     }
 
 #db is tested here, will be put in api not in main later

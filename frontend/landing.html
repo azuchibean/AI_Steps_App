@@ -34,7 +34,8 @@
                 }
 
                 // Token is valid, proceed to load the landing page content
-                loadLandingPageContent();  // Call a function to load the landing page content
+                const userData = await response.json();  
+                loadLandingPageContent(userData);
 
             } catch (error) {
                 console.error("Error validating token:", error);
@@ -42,17 +43,12 @@
                 window.location.href = "login.html";
             }
         })(); // IIFE ends here
-
-        // Example function to load content for the landing page
-        function loadLandingPageContent() {
-            // Implement your logic to load and display landing page content here
-            console.log("Landing page content loaded successfully!");
-        }
     </script>
 </head>
 
 <body>
-    <h1>Welcome to the landing page </h1>
+    <div id="loading"></div>
+    <div id="content"></div>
     <script src="landing.js"></script>
 </body>
 
