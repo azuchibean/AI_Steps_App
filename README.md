@@ -6,9 +6,6 @@ venv\Scripts\activate to activate venv when in backend, deactivate when done
 
 activating will let you install dependencies only in venv file and not globally on computer
 
-# for when 
-pip freeze > requirements.txt when 
-
 # for when you are cd in backend
 pip freeze > requirements.txt when you're done install any new dependencies
 
