@@ -80,6 +80,32 @@ def get_user_by_email(connection, email):
     finally:
         cursor.close()
 
+def update_user_password(db, email, hashed_password):
+    cursor = db.cursor()
+    try:
+        cursor.execute(
+            "UPDATE users SET password_hash = %s WHERE email = %s",
+            (hashed_password, email)
+        )
+        db.commit()
+    except Error as e:
+        db.rollback()
+        raise e
+    finally:
+        cursor.close()
+
+
+def update_user_password(db, email, new_hashed_password):
+    """Update the user's password in the database."""
+    cursor = db.cursor()
+    update_query = """
+    UPDATE users SET password_hash = %s WHERE email = %s
+    """
+    cursor.execute(update_query, (new_hashed_password, email))
+    db.commit()
+    cursor.close()
+
+
 def close_db_connection(connection):
     """Closes the database connection."""
     if connection.is_connected():

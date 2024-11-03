@@ -83,3 +83,76 @@ if (registerForm) {  // Only add event listener if the registration form exists 
         }
     });
 }
+
+// Handle Forgot Password
+const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+if (forgotPasswordForm) {  // Only add event listener if the forgot password form exists on the page
+    forgotPasswordForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById("email").value;
+        const messageElement = document.getElementById("forgotPasswordMessage");
+        
+        messageElement.textContent = "Sending reset link...";
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/request-password-reset`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                messageElement.style.color = "green";
+                messageElement.textContent = "Reset link sent! Check your email.";
+            } else {
+                throw new Error(data.detail || "Failed to send reset link.");
+            }
+        } catch (error) {
+            messageElement.style.color = "red";
+            messageElement.textContent = error.message;
+        }
+    });
+}
+
+// Handle Reset Password
+const resetForm = document.getElementById("resetForm");
+if (resetForm) {  // Only add event listener if the reset password form exists on the page
+    // Extract token from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    resetForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const newPassword = document.getElementById("newPassword").value;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/reset-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token: token,
+                    new_password: newPassword,
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert("Password reset successful!");
+                // Redirect to login page if needed
+                window.location.href = "login.html";
+            } else {
+                alert("Error: " + data.detail);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+}
