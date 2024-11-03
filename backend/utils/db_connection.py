@@ -28,7 +28,6 @@ def create_user_table(connection):
     """Creates the users table if it does not already exist."""
     cursor = connection.cursor()
     try:
-        # can specify details of it, probably requires first name, email, hashed password, api key, and number of times api used
         create_table_query = """
         CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,7 +52,6 @@ def insert_user(connection, first_name, email, password_hash):
     """Inserts a new user into the users table."""
     cursor = connection.cursor()
     try:
-        # can change for specific requirements
         insert_user_query = """
         INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)
         """
@@ -70,8 +68,8 @@ def get_user_by_email(connection, email):
     """Retrieve a user from the database by email."""
     cursor = connection.cursor(dictionary=True)
     try:
-        query = "SELECT * FROM users WHERE email = %s"
-        cursor.execute(query, (email,))
+        select_query = "SELECT * FROM users WHERE email = %s"
+        cursor.execute(select_query, (email,))
         user = cursor.fetchone()
         return user
     except Error as e:
@@ -80,31 +78,20 @@ def get_user_by_email(connection, email):
     finally:
         cursor.close()
 
-def update_user_password(db, email, hashed_password):
-    cursor = db.cursor()
+def update_user_password(connection, email, hashed_password):
+    """Updates user password"""
+    cursor = connection.cursor()
     try:
-        cursor.execute(
-            "UPDATE users SET password_hash = %s WHERE email = %s",
-            (hashed_password, email)
-        )
-        db.commit()
+        update_query = """
+        UPDATE users SET password_hash = %s WHERE email = %s
+        """
+        cursor.execute(update_query,(hashed_password, email))
+        connection.commit()
     except Error as e:
-        db.rollback()
-        raise e
+        print("Error updating user password:", e)
+        connection.rollback()
     finally:
         cursor.close()
-
-
-def update_user_password(db, email, new_hashed_password):
-    """Update the user's password in the database."""
-    cursor = db.cursor()
-    update_query = """
-    UPDATE users SET password_hash = %s WHERE email = %s
-    """
-    cursor.execute(update_query, (new_hashed_password, email))
-    db.commit()
-    cursor.close()
-
 
 def close_db_connection(connection):
     """Closes the database connection."""

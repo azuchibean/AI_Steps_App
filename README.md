@@ -31,4 +31,13 @@ python-dotenv - for env vars
 
 mysql-connector-python - for connection to mysql db
 
+requests - to make http requests (specifically to email)
+
+passlib - manages multiple algorithms (may not need)
+
+bcrypt - password hashing
+
+python-jose - for use with JWT
+
+
 # more libraries probably coming for jwt/authentication (someone decide) and for hashing (probably bcrypt)

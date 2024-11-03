@@ -1,10 +1,9 @@
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
-from jose import JWTError, jwt
+from jose import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,8 +18,6 @@ RESET_PASSWORD_SECRET_KEY = os.getenv("RESET_PASSWORD_SECRET_KEY")
 MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY") 
 MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN") 
 SENDER_EMAIL= os.getenv("SECRSENDER_EMAILET_KEY") 
-
-    
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
