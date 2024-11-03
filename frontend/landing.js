@@ -1,16 +1,19 @@
+
 function loadLandingPageContent(userData) {
     const contentDiv = document.getElementById("content"); // Get the content div
     contentDiv.style.display = "block"; // Ensure the content div is visible
 
     // Access user data
-    const userName = userData.first_name;  // Assuming `user` contains the user's name or email
+    const userName = userData.first_name;  
 
-    const landingPageMessage = document.createElement('h1');
-    landingPageMessage.textContent = 'Landing Page';
-    const welcomeMessage = document.createElement('h2');
-    welcomeMessage.textContent = `Welcome, ${userName}!`;
-    contentDiv.appendChild(landingPageMessage);
-    contentDiv.appendChild(welcomeMessage); 
+    const landingPageMessageElement = document.createElement('h1');
+    landingPageMessageElement.textContent = messages.landingPageMessage; 
+
+    const welcomeMessageElement = document.createElement('h2');
+    welcomeMessageElement.textContent = messages.landingPageWelcome(userName); 
+
+    contentDiv.appendChild(landingPageMessageElement);
+    contentDiv.appendChild(welcomeMessageElement); 
 
     loadConsumptionData(userData, contentDiv); // Pass contentDiv to the consumption data function
 
@@ -21,11 +24,11 @@ function loadConsumptionData(userData, contentDiv) {
     const apiUsage = userData.total_api_calls;  
     const freeCallsRemaining = userData.free_api_calls_remaining;
 
-    const usageMessage = document.createElement('p');
-    usageMessage.textContent = `API Usage: ${apiUsage} requests`;
-    contentDiv.appendChild(usageMessage); 
+    const usageMessageElement = document.createElement('p');
+    usageMessageElement.textContent = messages.apiUsageMessage(apiUsage); 
+    contentDiv.appendChild(usageMessageElement); 
 
-    const freeCallsRemainingUsage = document.createElement('p');
-    freeCallsRemainingUsage.textContent = `Free Calls Remaining: ${freeCallsRemaining}`;
-    contentDiv.appendChild(freeCallsRemainingUsage);
+    const freeCallsRemainingUsageElement = document.createElement('p');
+    freeCallsRemainingUsageElement.textContent = messages.freeCallsRemainingMessage(freeCallsRemaining);
+    contentDiv.appendChild(freeCallsRemainingUsageElement);
 }

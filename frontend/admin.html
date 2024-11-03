@@ -37,10 +37,8 @@
                     window.location.href = "landing.html";
                     return;
                 }
-
-                // Hide loading message and show admin content
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("adminContent").style.display = "block";
+                console.log("laoding admin page content")
+                loadAdminPageContent();
 
             } catch (error) {
                 console.error("Error validating token:", error);
@@ -53,10 +51,9 @@
 </head>
 
 <body>
-    <div id="loading"></div>
-    <div id="adminContent">
-        <h1>Welcome to the admin page</h1>
-    </div>
+    <div id="adminContent"></div>
+    <script src="./lang/en/user.js"></script>
+    <script src="admin.js"></script>
 </body>
 
 </html>
