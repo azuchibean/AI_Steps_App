@@ -53,6 +53,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
     return user
 
+# Root endpoint
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to my FastAPI application!"}
+
 # Register endpoint
 @app.post("/register")
 async def register_user(request: RegisterRequest):
