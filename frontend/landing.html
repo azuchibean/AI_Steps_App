@@ -30,6 +30,7 @@
                 if (!response.ok) {
                     // If token validation fails, redirect to the login page
                     window.location.href = "login.html";
+                    console.log(response)
                     return;
                 }
 

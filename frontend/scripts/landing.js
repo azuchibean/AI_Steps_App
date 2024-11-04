@@ -20,7 +20,7 @@ function loadLandingPageContent(userData) {
     console.log("Landing page content loaded successfully!");
 }
 
-function loadConsumptionData(userData, contentDiv) {
+async function loadConsumptionData(userData, contentDiv) {
     const apiUsage = userData.total_api_calls;  
     const freeCallsRemaining = userData.free_api_calls_remaining;
 
@@ -31,4 +31,35 @@ function loadConsumptionData(userData, contentDiv) {
     const freeCallsRemainingUsageElement = document.createElement('p');
     freeCallsRemainingUsageElement.textContent = messages.freeCallsRemainingMessage(freeCallsRemaining);
     contentDiv.appendChild(freeCallsRemainingUsageElement);
+
+    const generateButton = document.createElement('button');
+    generateButton.textContent = "What is the best park in Vancouver?";
+    contentDiv.appendChild(generateButton);
+
+    const llmMessageDiv = document.createElement('div');
+    contentDiv.appendChild(llmMessageDiv);
+
+    generateButton.addEventListener('click', async () => {
+        const llmMessageContent = await generate_llm_message();
+        llmMessageDiv.innerHTML = llmMessageContent || "Error generating message."; // Update to use the content directly
+    });
+}
+
+// Temporary spot
+async function generate_llm_message() {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/llm_test`, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch data from server");
+        }
+
+        const data = await response.json();
+        console.log("Received data:", data.response);
+        return data.response;
+    } catch (error) {
+        console.error("Error:", error);
+    }
 }

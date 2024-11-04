@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from model_handler import find_top_destinations
+from model_handler import llm_test
 from utils.models.models import RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
@@ -189,7 +189,8 @@ async def reset_password(request: PasswordReset):
 
 @app.get("/llm_test")
 async def llm_message():
-    return find_top_destinations
+    generated_text = llm_test()
+    return {"response": generated_text}
 
 #Creates user table if it doesn't exist
 def main():

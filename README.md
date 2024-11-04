@@ -39,5 +39,4 @@ bcrypt - password hashing
 
 python-jose - for use with JWT
 
-
-# more libraries probably coming for jwt/authentication (someone decide) and for hashing (probably bcrypt)
+accelerate 
