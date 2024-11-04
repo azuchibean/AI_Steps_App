@@ -1,7 +1,8 @@
 
 // waiting for the backend endpoints to be created
 
-const API_BASE_URL = "http://127.0.0.1:8000";  // Base URL for the backend API
+// const API_BASE_URL = "http://127.0.0.1:8000";  // Base URL for the backend API
+const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // Base URL for the backend API
 
 // Handle Login
 const loginForm = document.getElementById("loginForm");
@@ -37,8 +38,6 @@ if (loginForm) {  // Only add event listener if the login form exists on the pag
             } else {
                 window.location.href = "landing.html"; // Redirect to landing page
             }
-
-
         } catch (error) {
             loginMessage.style.color = "red";
             loginMessage.textContent = error.message;

@@ -48,7 +48,7 @@ async function loadConsumptionData(userData, contentDiv) {
 // Temporary spot
 async function generate_llm_message() {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/llm_test`, {
+        const response = await fetch(`${API_BASE_URL}/llm_test`, {
             method: "GET",
         });
 
