@@ -1,5 +1,5 @@
 # API server is here
-from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
@@ -24,8 +24,16 @@ app.add_middleware(
 # Define the OAuth2PasswordBearer scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# Define the function to retrieve the current user from the token
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+# Define the function to retrieve the current user 
+async def get_current_user(request: Request):
+    # Extract the token from the cookie
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication credentials were not provided",
+        )
+
     try:
         # Decode the JWT token
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -52,6 +60,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             detail="User not found",
         )
     return user
+
 
 # Root endpoint
 @app.get("/")
@@ -92,7 +101,7 @@ async def register_user(request: RegisterRequest):
 
 # Login endpoint
 @app.post("/login")
-async def login(request: LoginRequest):
+async def login(request: LoginRequest, response: Response):
     # Connect to the database
     db = get_db_connection()
     if not db:
@@ -116,7 +125,18 @@ async def login(request: LoginRequest):
         data={"sub": user["email"]}, expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer", "isAdmin": user.get("is_admin") }
+    # Set the token in an HTTP-only cookie
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True, 
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, 
+        secure=False, 
+        samesite="Lax"  # Helps prevent CSRF attacks
+    )
+
+    return {"message": "Login successful", "isAdmin": user.get("is_admin")}
+
 
 
 # Verify token endpoint
@@ -159,7 +179,7 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
 
     # Generate the password reset token
     token = create_password_reset_token(request.email)
-    reset_link = f"http://127.0.0.1:5500/reset-password.html?token={token}"  # Replace with your frontend URL
+    reset_link = f"https://isa-project-frontend.netlify.app/reset-password.html?token={token}"  # Replace with your frontend URL
     
 
     # Send the email with the reset link (mocked here for demonstration)
@@ -196,6 +216,15 @@ async def reset_password(request: PasswordReset):
 async def llm_message():
     generated_text = llm_test()
     return {"response": generated_text}
+
+
+
+@app.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out successfully"}
+
+
 
 #Creates user table if it doesn't exist
 def main():

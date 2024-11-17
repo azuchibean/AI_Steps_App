@@ -6,7 +6,7 @@ const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // Base URL 
 
 // Handle Login
 const loginForm = document.getElementById("loginForm");
-if (loginForm) {  // Only add event listener if the login form exists on the page
+if (loginForm) {
     loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
@@ -22,21 +22,22 @@ if (loginForm) {  // Only add event listener if the login form exists on the pag
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password }),
+                credentials: "include", // Include cookies in the request
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
 
             if (!response.ok) throw new Error(data.detail || "Login failed");
-            localStorage.setItem("token", data.access_token);  // Save the token
+
             loginMessage.style.color = "green";
             loginMessage.textContent = "Login successful!";
 
-            // Redirect to another page or perform other actions here     
-            if (data.isAdmin) {  
-                window.location.href = "admin.html";  // Redirect to admin page
+            // Redirect based on user role
+            if (data.isAdmin) {
+                window.location.href = "admin.html";
             } else {
-                window.location.href = "landing.html"; // Redirect to landing page
+                window.location.href = "landing.html";
             }
         } catch (error) {
             loginMessage.style.color = "red";
@@ -157,4 +158,23 @@ if (resetForm) {  // Only add event listener if the reset password form exists o
             console.error("Error:", error);
         }
     });
+}
+
+// Check if user is logged in when a page loads (verifyToken function inside a DOMContentLoaded event listener)
+async function verifyToken() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/verify-token`, {
+            method: "GET",
+            credentials: "include" // Include cookies in the request
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || "Token verification failed");
+        
+        console.log("Token is valid:", data);
+        return data;
+    } catch (error) {
+        console.error("Error verifying token:", error);
+        return null;
+    }
 }
