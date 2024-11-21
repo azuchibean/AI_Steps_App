@@ -26,8 +26,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 # Define the function to retrieve the current user 
 async def get_current_user(request: Request):
+    
     # Extract the token from the cookie
     token = request.cookies.get("access_token")
+
+
+    # Add extensive logging
+    print(f"Received cookie: {token}")
+    print(f"All cookies: {request.cookies}")
+
+
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -38,6 +46,13 @@ async def get_current_user(request: Request):
         # Decode the JWT token
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
+
+
+        # Add logging for payload
+        print(f"Decoded payload: {payload}")
+        print(f"Email from payload: {email}")
+
+
         if email is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -132,7 +147,7 @@ async def login(request: LoginRequest, response: Response):
         httponly=True, 
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, 
         secure=False, 
-        samesite="Lax"  # Helps prevent CSRF attacks
+        samesite="None"  # Helps prevent CSRF attacks
     )
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
