@@ -3,8 +3,8 @@ from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Re
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from model_handler import llm_test
-from utils.models.models import RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
+from model_handler import llm_run
+from utils.models.models import RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset, LocationDetails
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
 from datetime import timedelta
@@ -212,12 +212,26 @@ async def reset_password(request: PasswordReset):
 
     return {"message": "Password has been reset successfully"}
 
-@app.get("/llm_test")
-async def llm_message():
-    generated_text = llm_test()
+@app.post("/llm")
+async def llm_start(request: LocationDetails):
+    latitude = request.latitude
+    longitude = request.longitude
+    height = request.height
+    steps = request.steps
+    location_type = request.location_type
+
+    generated_text = llm_run(latitude, longitude, height, steps, location_type)
     return {"response": generated_text}
 
+# @app.post("/find_locations")
+# async def find_locations(request: LocationDetails):
+#     latitude = request.latitude
+#     longitude = request.longitude
+#     height = request.height
+#     steps = request.steps
+#     location_type = request.location_type
 
+#     return location_finder(latitude, longitude, height, steps, location_type)
 
 @app.post("/logout")
 async def logout(response: Response):

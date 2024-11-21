@@ -1,7 +1,7 @@
 from geopy.distance import geodesic
 
 # Uses geopy to filter for locations in a certain range
-def filter_places_by_radius(center, data, desired_radius, tolerance):
+def filter_places_by_radius(center, data, desired_radius, tolerance=100):
     """Filter places based on distance from a central point."""
     results_within_radius = []
 
