@@ -49,6 +49,7 @@ async function generate_llm_message() {
     try {
         const response = await fetch(`${API_BASE_URL}/llm_test`, {
             method: "GET",
+            credentials: "include", 
         });
 
         if (!response.ok) {

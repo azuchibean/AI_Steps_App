@@ -14,7 +14,7 @@ app = FastAPI()
 
 # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
-    CORSMiddleware,
+    CORSMiddleware, 
     allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app"],  # Temporarily allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
@@ -137,7 +137,8 @@ async def login(request: LoginRequest, response: Response):
         httponly=True,
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         secure=True,
-        samesite="None"
+        samesite="None",
+        domain="coral-app-3m7bi.ondigitalocean.app"
     )
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
