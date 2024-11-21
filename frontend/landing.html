@@ -6,26 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing</title>
     <script>
-        // const API_BASE_URL = "http://127.0.0.1:8000";  // Your backend API URL
-        const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";
+        const API_BASE_URL = "http://127.0.0.1:8000";  // Your backend API URL
+        //const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";
 
         // Immediately Invoked Function Expression (IIFE) to run before content loads
         (async () => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                // If there's no token, redirect to the login page
-                window.location.href = "login.html";
-                return;
-            }
 
             try {
                 // Validate the token with the server
                 const response = await fetch(`${API_BASE_URL}/verify-token`, {
                     method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
+                    credentials: "include", // Include cookies
                 });
 
                 if (!response.ok) {
