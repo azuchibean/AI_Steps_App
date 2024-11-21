@@ -15,7 +15,7 @@ app = FastAPI()
 # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app", "*"],  # Temporarily allow all origins for testing
+    allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app"],  # Temporarily allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,11 +31,6 @@ async def get_current_user(request: Request):
     token = request.cookies.get("access_token")
 
 
-    # Add extensive logging
-    print(f"Received cookie: {token}")
-    print(f"All cookies: {request.cookies}")
-
-
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -46,11 +41,6 @@ async def get_current_user(request: Request):
         # Decode the JWT token
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
-
-
-        # Add logging for payload
-        print(f"Decoded payload: {payload}")
-        print(f"Email from payload: {email}")
 
 
         if email is None:
@@ -144,10 +134,10 @@ async def login(request: LoginRequest, response: Response):
     response.set_cookie(
         key="access_token",
         value=access_token,
-        httponly=True, 
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, 
-        secure=False, 
-        samesite="None"  # Helps prevent CSRF attacks
+        httponly=True,
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        secure=True,
+        samesite="None"
     )
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
