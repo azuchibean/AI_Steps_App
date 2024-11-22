@@ -47,18 +47,18 @@ def location_finder(latitude, longitude, height, steps, type):
         places_json_list = []
 
         if places_within_radius:
-            for name, distance in places_within_radius:
+            for name, vicinity, distance, rating in places_within_radius:
                 place_data = {
                     "name": name,
-                    "distance": round(distance, 2),  # Round to two decimal places
+                    "vicinity": vicinity,
+                    "distance": round(distance, 2),
+                    "rating": rating
                 }
                 places_json_list.append(place_data)
-                # print(f"Place near radius: {name} at {distance:.2f} m")
         else:
             return {"response":"No places found within the specified radius."}
 
         return places_json_list
-
 
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")

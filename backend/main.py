@@ -212,6 +212,10 @@ async def reset_password(request: PasswordReset):
 
     return {"message": "Password has been reset successfully"}
 
+# Provide latitude, longitude, height of person in cm, steps desired, and location_type
+# Supported types: https://developers.google.com/maps/documentation/places/web-service/supported_types
+# Returns json with two fields: api_response and llm_response. api_response has three objects, while llm_response is response chosen by llm.
+# Add text to highlight the one chosen by llm as "recommended" when display on front-end
 @app.post("/llm")
 async def llm_start(request: LocationDetails):
     latitude = request.latitude
@@ -220,18 +224,13 @@ async def llm_start(request: LocationDetails):
     steps = request.steps
     location_type = request.location_type
 
-    generated_text = llm_run(latitude, longitude, height, steps, location_type)
-    return {"response": generated_text}
+    response = llm_run(latitude, longitude, height, steps, location_type)
+    return {"response": response}
 
-# @app.post("/find_locations")
-# async def find_locations(request: LocationDetails):
-#     latitude = request.latitude
-#     longitude = request.longitude
-#     height = request.height
-#     steps = request.steps
-#     location_type = request.location_type
-
-#     return location_finder(latitude, longitude, height, steps, location_type)
+# to be implemented
+@app.post("/save_response")
+async def save_response_to_db(request):
+    return {}
 
 @app.post("/logout")
 async def logout(response: Response):
