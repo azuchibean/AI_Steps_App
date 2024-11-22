@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing</title>
+    <link rel="stylesheet" href="styles/landing.css">
     <script>
         //const API_BASE_URL = "http://127.0.0.1:8000";                    // in dev branch for testing
         const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // in main branch for deployment
@@ -21,9 +22,9 @@
                     credentials: "include", // Include cookies
                     headers: {
                         "Accept": "application/json"
-                     }
+                    }
                 });
-                
+
                 if (!response.ok) {
                     // If token validation fails, redirect to the login page
                     window.location.href = "login.html";
@@ -33,6 +34,7 @@
 
                 // Token is valid, proceed to load the landing page content
                 const userData = await response.json();
+                console.log("User data:", userData);
                 loadLandingPageContent(userData);
 
             } catch (error) {
@@ -46,6 +48,40 @@
 
 <body>
     <div id="content"></div>
+
+    <!-- Section 1: API Usage -->
+    <div id="api-usage-section" class="section">
+        <h2 id="api-usage-title"></h2>
+        <div id="api-usage-content"></div>
+    </div>
+
+    <!-- Section 2: User Input -->
+    <div id="user-input-section" class="section">
+        <h2 id="user-input-title"></h2>
+        <div id="steps-buttons"></div>
+        <div id="location-type"></div>
+    </div>
+
+    <!-- Section 3: User Selection -->
+    <div id="user-selection-section" class="section">
+        <h2 id="user-selection-title"></h2>
+        <p id="user-selection"></p>
+    </div>
+
+    <!-- Section 4: LLM Response -->
+    <div id="llm-response-section" class="section">
+        <h2 id="llm-response-title"></h2>
+        <div id="llm-response"></div>
+    </div>
+
+    <!-- Section 5: Best Park (for testing) -->
+    <div id="best-park-section" class="section">
+        <h2 id="best-park-title"></h2>
+        <div id="best-park-button-container"></div>
+        <div id="best-park-response"></div>
+    </div>
+
+
     <script src="./lang/en/user.js"></script>
     <script src="./scripts/landing.js"></script>
 </body>
