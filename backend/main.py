@@ -1,9 +1,6 @@
 # API server is here
 from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request
-
-from fastapi import Request
 from fastapi.responses import Response
-
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
@@ -16,7 +13,7 @@ import requests
 
 app = FastAPI()
 
-""" # Configure CORS middleware to allow your frontend origin
+# Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware, 
     allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app", "https://isa-frontend-285df755bfe6.herokuapp.com"],  # Temporarily allow all origins for testing
@@ -24,16 +21,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
- """
 
- # CORS Configuration
-app.add_middleware(
-    CORSMiddleware, 
-    allow_origins=["https://isa-frontend-285df755bfe6.herokuapp.com"],  # Production frontend origin
-    allow_credentials=True,  # Required for cookies
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
-)
 
 # Preflight Handler 
 @app.options("/{path:path}")
@@ -47,13 +35,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 # Define the function to retrieve the current user 
 async def get_current_user(request: Request):
     
-    # Log received cookies
-    print(f"Received cookies: {request.cookies}")  # Debug: log all cookies in the request
-
     # Extract the token from the cookie
     token = request.cookies.get("access_token")
-    print(f"Extracted token: {token}")  # Debug: log the token extracted from the cookies
-
 
     if not token:
         raise HTTPException(
@@ -181,14 +164,7 @@ async def verify_token(current_user: dict = Depends(get_current_user)):
         "first_name": current_user.get("first_name", "")
     }
     
-    """ return {
-        "message": "Token is valid",
-        "user": current_user["email"],
-        "isAdmin": current_user.get("is_admin", 0),  
-        "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
-        "total_api_calls": current_user.get("total_api_calls", 0),
-        "first_name": current_user.get("first_name", "")
-    } """
+   
 
 
 def send_reset_email(email: str, reset_link: str):

@@ -23,10 +23,7 @@
                         "Accept": "application/json"
                      }
                 });
-
-                 // Log response headers for debugging
-                console.log("Response headers:", [...response.headers.entries()]);
-
+                
                 if (!response.ok) {
                     // If token validation fails, redirect to the login page
                     window.location.href = "login.html";
