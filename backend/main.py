@@ -27,8 +27,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 # Define the function to retrieve the current user 
 async def get_current_user(request: Request):
     
+    # Log received cookies
+    print(f"Received cookies: {request.cookies}")  # Debug: log all cookies in the request
+
     # Extract the token from the cookie
     token = request.cookies.get("access_token")
+    print(f"Extracted token: {token}")  # Debug: log the token extracted from the cookies
 
 
     if not token:
@@ -138,7 +142,7 @@ async def login(request: LoginRequest, response: Response):
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         secure=True,
         samesite="None",
-        domain="coral-app-3m7bi.ondigitalocean.app"
+        path="/"  # Ensure cookie is available for all paths
     )
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
@@ -148,14 +152,26 @@ async def login(request: LoginRequest, response: Response):
 # Verify token endpoint
 @app.get("/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
-    return {
+
+    try:
+        print("Verify token endpoint hit.")  # Debug: log endpoint hit
+        print(f"Received cookies in request: {request.cookies}")  # Debug: log cookies received in this request
+        return {
+            "message": "Token is valid",
+            "user": current_user["email"],
+        }
+    except HTTPException as e:
+        print(f"Error in verify-token: {e.detail}")  # Debug: log the error detail
+        raise e
+    
+    """ return {
         "message": "Token is valid",
         "user": current_user["email"],
         "isAdmin": current_user.get("is_admin", 0),  
         "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
         "total_api_calls": current_user.get("total_api_calls", 0),
         "first_name": current_user.get("first_name", "")
-    }
+    } """
 
 
 def send_reset_email(email: str, reset_link: str):
