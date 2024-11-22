@@ -15,7 +15,7 @@ app = FastAPI()
 # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware, 
-    allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app"],  # Temporarily allow all origins for testing
+    allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app", "https://isa-frontend-285df755bfe6.herokuapp.com"],  # Temporarily allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
