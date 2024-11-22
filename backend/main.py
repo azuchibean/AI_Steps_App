@@ -1,5 +1,6 @@
 # API server is here
 from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request
+from fastapi import Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
@@ -152,17 +153,14 @@ async def login(request: LoginRequest, response: Response):
 # Verify token endpoint
 @app.get("/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
-
-    try:
-        print("Verify token endpoint hit.")  # Debug: log endpoint hit
-        print(f"Received cookies in request: {request.cookies}")  # Debug: log cookies received in this request
-        return {
-            "message": "Token is valid",
-            "user": current_user["email"],
-        }
-    except HTTPException as e:
-        print(f"Error in verify-token: {e.detail}")  # Debug: log the error detail
-        raise e
+    return {
+        "message": "Token is valid",
+        "user": current_user["email"],
+        "isAdmin": current_user.get("is_admin", 0),  
+        "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
+        "total_api_calls": current_user.get("total_api_calls", 0),
+        "first_name": current_user.get("first_name", "")
+    }
     
     """ return {
         "message": "Token is valid",
