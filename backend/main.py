@@ -1,6 +1,9 @@
 # API server is here
 from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request
+
 from fastapi import Request
+from fastapi.responses import Response
+
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
@@ -13,7 +16,7 @@ import requests
 
 app = FastAPI()
 
-# Configure CORS middleware to allow your frontend origin
+""" # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware, 
     allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app", "https://isa-frontend-285df755bfe6.herokuapp.com"],  # Temporarily allow all origins for testing
@@ -21,6 +24,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+ """
+
+ # CORS Configuration
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=["https://isa-frontend-285df755bfe6.herokuapp.com"],  # Production frontend origin
+    allow_credentials=True,  # Required for cookies
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
+
+# Preflight Handler 
+@app.options("/{path:path}")
+async def preflight_handler():
+    return Response(status_code=200)
+
 
 # Define the OAuth2PasswordBearer scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
