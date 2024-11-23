@@ -160,3 +160,23 @@ if (resetForm) {  // Only add event listener if the reset password form exists o
         }
     });
 }
+
+
+document.getElementById("logout-button").addEventListener("click", async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/logout`, {
+            method: "POST",
+            credentials: "include"
+        });
+
+        if (response.ok) {
+            window.location.href = "login.html";
+        } else {
+            console.error("Logout failed:", response);
+        }
+    } catch (error) {
+        console.error("Error during logout:", error);
+    }
+});
+
+

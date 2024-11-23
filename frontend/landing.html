@@ -44,10 +44,23 @@
                 window.location.href = "login.html";
             }
         })(); // IIFE ends here
+
     </script>
 </head>
 
+
+
 <body>
+
+    <nav id="navbar">
+        <ul>
+            <li><a href="landing.html">Home</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><button id="logout-button">Logout</button></li>
+        </ul>
+    </nav>
+
+    
     <div id="content"></div>
 
     <!-- Section 1: API Usage -->
@@ -77,6 +90,8 @@
 
     <script src="./lang/en/user.js"></script>
     <script src="./scripts/landing.js"></script>
+    <script src="./scripts/app.js"></script>
+
 </body>
 
 </html>

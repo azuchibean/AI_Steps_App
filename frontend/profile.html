@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="./styles/profile.css">
+
+    <script>
+        const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";
+
+        // Fetch user profile on page load
+        (async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/verify-token`, {
+                    method: "GET",
+                    credentials: "include",
+                    headers: { "Accept": "application/json" }
+                });
+
+                if (!response.ok) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const data = await response.json();
+                document.getElementById("user-name").textContent = data.first_name;
+                document.getElementById("user-email").textContent = data.user;
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                window.location.href = "login.html";
+            }
+        })();
+
+        // Handle account deletion
+        async function deleteAccount() {
+            if (confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/delete-account`, {
+                        method: "DELETE",
+                        credentials: "include"
+                    });
+
+                    if (response.ok) {
+                        alert("Account deleted successfully.");
+                        window.location.href = "login.html";
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error: ${errorData.detail}`);
+                    }
+                } catch (error) {
+                    console.error("Error deleting account:", error);
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+   
+    <nav id="navbar">
+        <ul>
+            <li><a href="landing.html">Home</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><button id="logout-button">Logout</button></li>
+        </ul>
+    </nav>
+
+    <!-- Profile Section -->
+    <div id="profile-container">
+        <h1>Profile</h1>
+        <p><strong>Name:</strong> <span id="user-name"></span></p>
+        <p><strong>Email:</strong> <span id="user-email"></span></p>
+        <button id="delete-account-button" onclick="deleteAccount()">Delete Account</button>
+    </div>
+</body>
+
+</html>
