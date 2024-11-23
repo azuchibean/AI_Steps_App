@@ -242,11 +242,6 @@ async def llm_start(request: LocationDetails):
     response = llm_run(latitude, longitude, height, steps, location_type)
     return {"response": response}
 
-# to be implemented
-@app.post("/save_response")
-async def save_response_to_db(request):
-    return {}
-
 @app.post("/logout")
 async def logout(response: Response):
     response.delete_cookie("access_token")
