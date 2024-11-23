@@ -165,12 +165,12 @@ async function loadInteractiveComponents(userData, userInputSection) {
 
         userSelectionDisplay.innerHTML = `
             ${messages.selectedMessage(
-                    selectedSteps,
-                    locationType,
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    heightInput
-            )}
+            selectedSteps,
+            locationType,
+            userLocation.latitude,
+            userLocation.longitude,
+            heightInput
+        )}
             <br>
             <a href="${googleMapsLink}" target="_blank">View on Google Maps</a>
         `;
@@ -209,8 +209,6 @@ async function loadInteractiveComponents(userData, userInputSection) {
 }
 
 
-
-
 // Request location from the user
 async function loadUserLocation(locationElement) {
     return new Promise((resolve) => {
@@ -218,7 +216,7 @@ async function loadUserLocation(locationElement) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    locationElement.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                    locationElement.textContent = messages.locationMessage(latitude, longitude);
                     resolve({ latitude, longitude });
                 },
                 (error) => {
@@ -267,7 +265,8 @@ function renderApiResponse(apiResponse, llmRecommendation) {
 
     // Add a title for the recommendations
     const recommendationsTitle = document.createElement("h3");
-    recommendationsTitle.textContent = "Recommended Locations:";
+    recommendationsTitle.textContent = messages.recommendationsTitle;
+    recommendationsTitle.className = "recommendations-title"; // Add a CSS class
     llmResponseDisplay.appendChild(recommendationsTitle);
 
     // Iterate over the `api_response` array and create elements for each item
@@ -282,23 +281,23 @@ function renderApiResponse(apiResponse, llmRecommendation) {
 
         // Address
         const placeAddress = document.createElement("p");
-        placeAddress.textContent = `Address: ${place.address}`;
+        placeAddress.textContent = `${messages.addressLabel}${place.address}`;
         placeContainer.appendChild(placeAddress);
 
         // Distance
         const placeDistance = document.createElement("p");
-        placeDistance.textContent = `Distance: ${place.distance.toFixed(2)} meters`;
+        placeDistance.textContent = `${messages.distanceLabel}${place.distance.toFixed(2)} meters`;
         placeContainer.appendChild(placeDistance);
 
         // Rating
         const placeRating = document.createElement("p");
-        placeRating.textContent = `Rating: ${place.rating}`;
+        placeRating.textContent = `${messages.ratingLabel}${place.rating}`;
         placeContainer.appendChild(placeRating);
 
         // Link to Google Maps
         const placeLink = document.createElement("a");
         placeLink.href = place.url;
-        placeLink.textContent = "View on Google Maps";
+        placeLink.textContent = messages.viewOnGoogleMaps;
         placeLink.target = "_blank"; // Open in a new tab
         placeContainer.appendChild(placeLink);
 
@@ -306,11 +305,21 @@ function renderApiResponse(apiResponse, llmRecommendation) {
         llmResponseDisplay.appendChild(placeContainer);
     });
 
+    // Add a line break before the recommendation title
+    const lineBreak = document.createElement("br");
+    llmResponseDisplay.appendChild(lineBreak);
+
     // Display the LLM recommendation
+    const llmRecommendationTitle = document.createElement("h3");
+    llmRecommendationTitle.textContent = messages.recommendationTitle;
+    llmRecommendationTitle.className = "recommendations-title";
+    llmResponseDisplay.appendChild(llmRecommendationTitle);
+
     const llmRecommendationElement = document.createElement("p");
-    llmRecommendationElement.textContent = `Our top recommendation: ${llmRecommendation}`;
+    llmRecommendationElement.textContent = llmRecommendation;
     llmResponseDisplay.appendChild(llmRecommendationElement);
 }
+
 
 
 // for sending POST request to save response/location to db

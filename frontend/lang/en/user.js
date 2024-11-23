@@ -20,8 +20,16 @@ const messages = {
     submitButton: 'Submit',
     saveResponseButton: 'Save Response',
     selectedMessage: (steps, type, lat, lon, h) =>
-        `Selected: ${steps} Steps<br>Location Type: ${type}<br>Your Height: ${h}<br>Location: Latitude ${lat}, Longitude ${lon}`,
+        `Selected: ${steps} steps<br>Location Type: ${type}<br>Your Height: ${h} cm<br>Location: Latitude ${lat}°, Longitude ${lon}°`,
+    locationMessage: (latitude, longitude) =>
+        `Latitude: ${latitude}°, Longitude: ${longitude}°`,
     llmResponseError: 'Error generating LLM message.',
     heightValidationError: 'Please enter a valid positive integer for height.',
 
+    recommendationsTitle: "Recommended Locations:",
+    recommendationTitle: "Our top recommendation:",
+    viewOnGoogleMaps: "View on Google Maps",
+    addressLabel: "Address: ",
+    distanceLabel: "Distance: ",
+    ratingLabel: "Rating: ",
 };

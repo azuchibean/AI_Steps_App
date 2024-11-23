@@ -1,5 +1,5 @@
-const API_BASE_URL = "http://127.0.0.1:8000";                    // in dev branch for testing
-//const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // in main branch for deployment
+// const API_BASE_URL = "http://127.0.0.1:8000";                    // in dev branch for testing
+const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // in main branch for deployment
 
 // Handle Login
 const loginForm = document.getElementById("loginForm");

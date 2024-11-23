@@ -75,3 +75,7 @@ p {
 #best-park-section {
     text-align: center;
 }
+
+.recommendations-title {
+    color: rgba(2, 65, 37, 0.531); /* Change to your preferred color */
+}
