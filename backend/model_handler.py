@@ -42,7 +42,4 @@ def llm_run(latitude, longitude, height, steps, location_type):
         "llm_recommendation" : llm_response["answer"]
     }
 
-    print(question)
-    print(context)
-
     return response

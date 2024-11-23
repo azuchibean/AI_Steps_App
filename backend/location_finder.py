@@ -47,12 +47,13 @@ def location_finder(latitude, longitude, height, steps, type):
         places_json_list = []
 
         if places_within_radius:
-            for name, vicinity, distance, rating in places_within_radius:
+            for name, address, distance, rating, url in places_within_radius:
                 place_data = {
                     "name": name,
-                    "vicinity": vicinity,
+                    "address": address,
                     "distance": round(distance, 2),
-                    "rating": rating
+                    "rating": rating,
+                    "url": url
                 }
                 places_json_list.append(place_data)
         else:

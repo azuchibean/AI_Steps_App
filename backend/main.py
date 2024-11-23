@@ -212,7 +212,7 @@ async def reset_password(request: PasswordReset):
 
     return {"message": "Password has been reset successfully"}
 
-# Provide latitude, longitude, height of person in cm, steps desired, and location_type
+# Parameters: latitude, longitude, height of person in cm, steps desired, and location_type
 # Supported types: https://developers.google.com/maps/documentation/places/web-service/supported_types
 # Returns json with two fields: api_response and llm_response. api_response has three objects, while llm_response is response chosen by llm.
 # Add text to highlight the one chosen by llm as "recommended" when display on front-end
