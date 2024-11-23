@@ -341,5 +341,3 @@ async def on_startup():
         close_db_connection(db) 
 
 
-if __name__ == "__main__":
-    main()

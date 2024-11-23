@@ -1,3 +1,5 @@
+
+
 function loadAdminPageContent(){
     const contentDiv = document.getElementById("content"); // Get the content div
     contentDiv.style.display = "block"; // Ensure the content div is visible
@@ -7,10 +9,18 @@ function loadAdminPageContent(){
     contentDiv.appendChild(adminPageMessageElement);
 
     //load Section 1: endpoint stats 
+    document.getElementById("endpoint-stats-title").textContent = messages.endpointStatsTitle;
+    document.getElementById("endpointMethod").textContent = messages.endpointMethodTitle;
+    document.getElementById("endPointEndpoint").textContent =  messages.endpointEndpointTitle;
+    document.getElementById("endpointRequests").textContent = messages.endpointRequestsTitle;
     loadEndpointStats();
 
     //load Section 2: api usage stats
-    loadApiUsageStats();
+    document.getElementById("user-api-consumption-title").textContent = messages.userAPIConsumptionTitle;
+    document.getElementById("usageUsername").textContent = messages.usageUsernameTitle;
+    document.getElementById("usageEmail").textContent = messages.usageEmailTitle;
+    document.getElementById("usageTotalRequests").textContent = messages.usageTotalRequestsTitle;
+    loadApiUsageStats(); 
  
 };
 
@@ -29,6 +39,8 @@ async function loadEndpointStats() {
 
     } catch (error) {
         console.error("Error loading endpoint stats content:", error);
+    } finally {
+        hideLoadingEndpoint();
     }
 }
 
@@ -63,6 +75,8 @@ async function loadApiUsageStats(){
 
     } catch (error) {
         console.error("Error loading API usage stats content:", error);
+    } finally {
+        hideLoadingApi();
     }
 }
 
@@ -81,3 +95,23 @@ function renderApiUsageStats(stats) {
         tableBody.appendChild(row);
     });
 }
+
+// Hide loading div
+function hideLoadingEndpoint() {
+    const loadingElement = document.getElementById("loading-endpoint");
+    if (loadingElement) {
+        loadingElement.style.display = "none"; 
+    }
+}
+// Hide loading div
+function hideLoadingApi() {
+    const loadingElement = document.getElementById("loading-api");
+    if (loadingElement) {
+        loadingElement.style.display = "none"; 
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadAdminPageContent();
+    console.log("loading admin page content");
+});

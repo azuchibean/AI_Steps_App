@@ -33,4 +33,13 @@ const messages = {
     addressLabel: "Address: ",
     distanceLabel: "Distance: ",
     ratingLabel: "Rating: ",
+
+    endpointStatsTitle: "API Endpoint Stats",
+    userAPIConsumptionTitle: "User API Consumption",
+    endpointMethodTitle: "Method",
+    endpointEndpointTitle: "Endpoint",
+    endpointRequestsTitle: "Requests",
+    usageUsernameTitle: "Username",
+    usageEmailTitle: "Email",
+    usageTotalRequestsTitle: "Total requests",
 };

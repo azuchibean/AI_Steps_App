@@ -38,8 +38,7 @@
                     console.log("not admin")
                     return;
                 }
-                console.log("laoding admin page content")
-                loadAdminPageContent();
+
 
             } catch (error) {
                 console.error("Error validating token:", error);
@@ -65,14 +64,15 @@
     <div id="content"></div>
     <!-- Section 1: Endpoint stats -->
     <div id="endpoint-stats" class="section">
-        <h2 id="endpoint-stats-title">API Endpoint Stats</h2>
+        <h2 id="endpoint-stats-title"></h2>
         <div id="endpoint-stats-container">
+            <div id="loading-endpoint">Loading...</div>
             <table id="endpoint-table">
                 <thead>
                     <tr>
-                        <th>Method</th>
-                        <th>Endpoint</th>
-                        <th>Requests</th>
+                        <th id="endpointMethod"></th>
+                        <th id="endPointEndpoint"></th>
+                        <th id="endpointRequests"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,17 +83,19 @@
 
     <!-- Section 2: User API consumption -->
     <div id="user-api-consumption" class="section">
-        <h2 id="user-api-consumption-title">User API Consumption</h2>
+        <h2 id="user-api-consumption-title"></h2>
         <div id="user-api-consumption-container">
+            <div id="loading-api">Loading...</div>
             <table id="user-api-table">
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Total Requests</th>
+                        <th id="usageUsername"></th>
+                        <th id="usageEmail"></th>
+                        <th id="usageTotalRequests"></th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                </tbody>
             </table>
         </div>
     </div>
