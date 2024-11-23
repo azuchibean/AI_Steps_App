@@ -81,9 +81,6 @@ async function loadConsumptionData(userId, apiUsageSection) {
     }
 }
 
-
-
-
 async function loadInteractiveComponents(userData, userInputSection) {
     // Steps buttons
     const stepsButtonsContainer = document.createElement("div");
@@ -213,6 +210,10 @@ async function loadInteractiveComponents(userData, userInputSection) {
             const llmResponseDisplay = document.getElementById("llm-response");
             llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
         }
+
+
+        // Update the "API Usage" section with the latest data
+        await updateApiUsage(userData.user_id);
     });
 }
 
@@ -326,4 +327,55 @@ function renderApiResponse(apiResponse, llmRecommendation) {
     const llmRecommendationElement = document.createElement("p");
     llmRecommendationElement.textContent = llmRecommendation;
     llmResponseDisplay.appendChild(llmRecommendationElement);
+}
+
+
+async function updateApiUsage(userId) {
+    try {
+        // Send GET request to fetch the latest API usage data
+        const response = await fetch(`${API_BASE_URL}/stats/apiUsage/${userId}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch updated API usage data");
+        }
+
+        const apiUsageData = await response.json();
+
+        // Update the "API Usage" section with the latest data
+        const apiUsageSection = document.getElementById("api-usage-content");
+        apiUsageSection.innerHTML = ""; // Clear the existing content
+
+        const usageMessageElement = document.createElement("p");
+        usageMessageElement.textContent = messages.apiUsageMessage(apiUsageData.llm_api_calls);
+        apiUsageSection.appendChild(usageMessageElement);
+
+        const freeCallsRemainingElement = document.createElement("p");
+        freeCallsRemainingElement.textContent = messages.freeCallsRemainingMessage(
+            apiUsageData.free_calls_remaining
+        );
+        apiUsageSection.appendChild(freeCallsRemainingElement);
+
+        // Display a warning if present
+        if (apiUsageData.warning) {
+            const warningMessageElement = document.createElement("p");
+            warningMessageElement.textContent = apiUsageData.warning;
+            warningMessageElement.style.color = "red";
+            apiUsageSection.appendChild(warningMessageElement);
+        }
+    } catch (error) {
+        console.error("Error updating API usage data:", error);
+
+        // Display an error message if the request fails
+        const apiUsageSection = document.getElementById("api-usage-content");
+        apiUsageSection.innerHTML = ""; // Clear the existing content
+
+        const errorElement = document.createElement("p");
+        errorElement.textContent = messages.errormessage || "Error updating API usage.";
+        apiUsageSection.appendChild(errorElement);
+    }
 }
