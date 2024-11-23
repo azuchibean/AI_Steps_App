@@ -192,6 +192,7 @@ async def login(request: LoginRequest, response: Response):
 async def verify_token(current_user: dict = Depends(get_current_user)):
     return {
         "message": "Token is valid",
+        "user_id": current_user["id"],
         "user": current_user["email"],
         "isAdmin": current_user.get("is_admin", 0),  
         "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
