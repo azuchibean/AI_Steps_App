@@ -54,7 +54,7 @@ async function loadConsumptionData(userId, apiUsageSection) {
 
         // Display API Usage
         const usageMessageElement = document.createElement("p");
-        usageMessageElement.textContent = messages.apiUsageMessage(apiUsageData.total_api_calls);
+        usageMessageElement.textContent = messages.apiUsageMessage(apiUsageData.llm_api_calls);
         apiUsageSection.appendChild(usageMessageElement);
 
         // Display Free Calls Remaining

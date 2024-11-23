@@ -79,3 +79,8 @@ p {
 .recommendations-title {
     color: rgba(2, 65, 37, 0.531); /* Change to your preferred color */
 }
+
+#height-input {
+    height: 25px;
+    margin-top: 15px;
+}
