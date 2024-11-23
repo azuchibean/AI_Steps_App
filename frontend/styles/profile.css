@@ -78,3 +78,46 @@ body {
     background-color: #575757;
     border-radius: 4px;
 }
+
+
+/* Update Name Section */
+#update-name-container {
+    margin-top: 30px;
+    margin-top: 30px;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+#update-name-container h2 {
+    color: #555759;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#new-name {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s;
+}
+
+
+
+#update-name-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #436af5;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#update-name-button:hover {
+    background-color: #0056b3;
+}

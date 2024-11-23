@@ -19,8 +19,41 @@
                 document.getElementById("user-email").textContent = userData.user;
             }
         });
+
+         // Add event listener to delete account button
+        document.addEventListener('DOMContentLoaded', () => {
+        const deleteButton = document.getElementById("delete-account-button");
+        
+        deleteButton.addEventListener("click", () => {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                auth.deleteAccount(); // Call the deleteAccount method from auth.js
+            }
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const updateNameButton = document.getElementById("update-name-button");
+    const newNameInput = document.getElementById("new-name");
+
+    updateNameButton.addEventListener("click", async () => {
+        const newName = newNameInput.value.trim();
+        if (newName) {
+            const updated = await auth.updateName(newName);
+            if (updated) {
+                // Update the name displayed on the profile
+                document.getElementById("user-name").textContent = newName;
+            }
+        } else {
+            alert("Please enter a valid name.");
+        }
+    });
+});
+
+
+       
     </script>
-    
+
 </head>
 
 <body>
@@ -38,7 +71,15 @@
         <h1>Profile</h1>
         <p><strong>Name:</strong> <span id="user-name"></span></p>
         <p><strong>Email:</strong> <span id="user-email"></span></p>
-        <button id="delete-account-button" onclick="deleteAccount()">Delete Account</button>
+
+        <div id="update-name-container">
+            <h2>Update Name</h2>
+            <input type="text" id="new-name" placeholder="Enter new name">
+            <button id="update-name-button">Update Name</button>
+        </div>
+
+
+        <button id="delete-account-button">Delete Account</button>
     </div>
 
     <script src="./scripts/app.js"></script>

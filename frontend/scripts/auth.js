@@ -86,7 +86,67 @@ class Auth {
             return null;
         }
     }
+
+    async deleteAccount() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/delete-account`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+    
+            if (response.ok) {
+                console.log("Account deleted successfully");
+                window.location.href = "login.html";
+                return true;
+            } else {
+                console.error("Failed to delete account:", response.statusText);
+                alert("Failed to delete account. Please try again.");
+                return false;
+            }
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            alert("An error occurred while deleting your account. Please try again.");
+            return false;
+        }
+    }
+
+
+    async updateName(newName) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/update-name`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ new_name: newName })
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.message);
+                alert("Name updated successfully!");
+                return true;
+            } else {
+                const error = await response.json();
+                console.error("Failed to update name:", error.detail);
+                alert(`Error updating name: ${error.detail}`);
+                return false;
+            }
+        } catch (error) {
+            console.error("Error during name update:", error);
+            alert("An error occurred. Please try again.");
+            return false;
+        }
+    }
+    
 }
+
+
 
 // Create and export a single instance
 const auth = new Auth();

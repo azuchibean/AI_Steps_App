@@ -1,5 +1,5 @@
 # API server is here
-from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request
+from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request, Body
 from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
@@ -367,5 +367,32 @@ async def delete_account(response: Response, current_user: dict = Depends(get_cu
             raise HTTPException(status_code=500, detail="Failed to delete account")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        close_db_connection(db)
+
+
+
+@app.put("/update-name")
+async def update_name(new_name: str = Body(..., embed=True), current_user: dict = Depends(get_current_user)):
+    """
+    Updates the user's name in the database.
+    """
+    user_id = current_user["id"]
+    
+    # Connect to the database
+    db = get_db_connection()
+    if not db:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+    
+    try:
+        # Update the user's name in the database
+        cursor = db.cursor()
+        update_query = "UPDATE users SET first_name = %s WHERE id = %s"
+        cursor.execute(update_query, (new_name, user_id))
+        db.commit()
+        return {"message": "Name updated successfully"}
+    except Error as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error updating name: {e}")
     finally:
         close_db_connection(db)
