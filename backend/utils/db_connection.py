@@ -224,7 +224,7 @@ def get_api_usage_data_for_user(connection, user_id):
         # If results are found
         if results:
             result = results[0]  # Extract the first row
-            free_calls_remaining = max(20 - result.get("total_api_calls", 0), 0)  # Default to 0 if key is missing
+            free_calls_remaining = max(20 - result.get("llm_api_calls", 0), 0)  # Default to 0 if key is missing
             result["warning"] = (
                 "You have exceeded your 20 free API calls. Additional requests may incur charges."
                 if free_calls_remaining == 0
@@ -235,34 +235,17 @@ def get_api_usage_data_for_user(connection, user_id):
 
         # If no results are found, return a default structure
         return {
-            "total_api_calls": 0,
+            "llm_api_calls": 0,
             "free_calls_remaining": 20,
             "warning": None
         }
     except Error as e:
         print("Error fetching API usage data for user:", e)
         return {
-            "total_api_calls": 0,
+            "llm_api_calls": 0,
             "free_calls_remaining": 20,
             "warning": "Error fetching API usage data. Please try again later."
         }
     finally:
         cursor.close()
 
-def update_llm_api_calls(connection, user_id:int):
-    """Update the llm_api_calls for a user in the api_usage table"""
-    cursor = connection.cursor()
-    try:
-        update_query = """
-        UPDATE api_usage 
-        SET llm_api_calls = llm_api_calls + 1
-        WHERE user_id = %s
-        """
-        cursor.execute(update_query, (user_id,))
-        connection.commit()
-        print(f"LLM API calls updated for user_id {user_id}")
-    except Error as e:
-        print("Error updating LLM API calls:", e)
-        connection.rollback()
-    finally:
-        cursor.close()

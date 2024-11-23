@@ -5,11 +5,11 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from utils.models.models import LocationDetails, RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
-from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, update_llm_api_calls
+from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
 from datetime import timedelta
 import requests 
-from utils.request_logger import log_endpoint_stats, update_user_api_usage
+from utils.request_logger import log_endpoint_stats, update_user_api_usage, update_llm_api_calls
 from model_handler import llm_run
 
 app = FastAPI()
@@ -46,7 +46,11 @@ async def log_request_and_update_usage(request: Request, call_next):
         
         # Update the user's API usage in the `api_usage` table
         await update_user_api_usage(user_id)
-
+        
+        if request.url.path == '/llm' and request.method == 'POST':
+            await update_llm_api_calls(user_id)
+        
+        
     # Process the request and return the response
     response = await call_next(request)
     return response
@@ -275,18 +279,8 @@ async def llm_start(request: LocationDetails):
     steps = request.steps
     location_type = request.location_type
 
-    response = llm_run(latitude, longitude, height, steps, location_type)
-    
-    # update LLM API calls 
-    user = get_current_user(request)
-    user_id = user["id"]
-    connection = get_db_connection()
-    if connection:
-        try:
-            update_llm_api_calls(connection, user_id)
-        finally:
-            connection.close() 
-            
+    response = llm_run(latitude, longitude, height, steps, location_type)  
+
     return {"response": response}
 
 @app.post("/logout")

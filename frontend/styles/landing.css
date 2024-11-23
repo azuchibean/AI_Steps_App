@@ -80,6 +80,10 @@ p {
     color: rgba(2, 65, 37, 0.531); /* Change to your preferred color */
 }
 
+#height-input {
+    height: 25px;
+    margin-top: 15px;
+}
 
 /* Nav bar*/
 #navbar {
@@ -115,3 +119,40 @@ p {
     background-color: #575757;
     border-radius: 4px;
 }
+
+
+/* Nav bar*/
+#navbar {
+    background-color: #333;
+    display: flex;
+    justify-content: flex-end; /* Align all items to the right */
+    align-items: center; /* Vertically align items */
+    padding: 10px 20px;
+}
+
+#navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+#navbar ul li {
+    padding: 10px;
+}
+
+#navbar a, #navbar button {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#navbar a:hover, #navbar button:hover {
+    background-color: #575757;
+    border-radius: 4px;
+}
+
