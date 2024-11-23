@@ -39,6 +39,8 @@ async function loadEndpointStats() {
 
     } catch (error) {
         console.error("Error loading endpoint stats content:", error);
+    } finally {
+        hideLoadingEndpoint();
     }
 }
 
@@ -73,6 +75,8 @@ async function loadApiUsageStats(){
 
     } catch (error) {
         console.error("Error loading API usage stats content:", error);
+    } finally {
+        hideLoadingApi();
     }
 }
 
@@ -90,6 +94,21 @@ function renderApiUsageStats(stats) {
         `;
         tableBody.appendChild(row);
     });
+}
+
+// Hide loading div
+function hideLoadingEndpoint() {
+    const loadingElement = document.getElementById("loading-endpoint");
+    if (loadingElement) {
+        loadingElement.style.display = "none"; 
+    }
+}
+// Hide loading div
+function hideLoadingApi() {
+    const loadingElement = document.getElementById("loading-api");
+    if (loadingElement) {
+        loadingElement.style.display = "none"; 
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
