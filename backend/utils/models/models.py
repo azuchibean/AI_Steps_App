@@ -17,3 +17,11 @@ class PasswordResetRequest(BaseModel):
 class PasswordReset(BaseModel):
     token: str
     new_password: str
+
+# Height should be in cm
+class LocationDetails(BaseModel):
+    latitude: float
+    longitude: float
+    height: int
+    steps: int
+    location_type: str
