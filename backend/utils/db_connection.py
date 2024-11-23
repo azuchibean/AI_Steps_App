@@ -249,3 +249,20 @@ def get_api_usage_data_for_user(connection, user_id):
     finally:
         cursor.close()
 
+
+def delete_user(connection, user_id):
+    """Deletes a user from the database."""
+    cursor = connection.cursor()
+    try:
+        delete_query = """
+        DELETE FROM users WHERE id = %s
+        """
+        cursor.execute(delete_query, (user_id,))
+        connection.commit()
+        return True
+    except Error as e:
+        print("Error deleting user:", e)
+        connection.rollback()
+        return False
+    finally:
+        cursor.close()
