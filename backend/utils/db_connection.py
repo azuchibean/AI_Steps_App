@@ -249,20 +249,3 @@ def get_api_usage_data_for_user(connection, user_id):
     finally:
         cursor.close()
 
-def update_llm_api_calls(connection, user_id:int):
-    """Update the llm_api_calls for a user in the api_usage table"""
-    cursor = connection.cursor()
-    try:
-        update_query = """
-        UPDATE api_usage 
-        SET llm_api_calls = llm_api_calls + 1
-        WHERE user_id = %s
-        """
-        cursor.execute(update_query, (user_id,))
-        connection.commit()
-        print(f"LLM API calls updated for user_id {user_id}")
-    except Error as e:
-        print("Error updating LLM API calls:", e)
-        connection.rollback()
-    finally:
-        cursor.close()
