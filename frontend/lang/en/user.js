@@ -5,6 +5,7 @@ const messages = {
     landingPageWelcome: (userName) => `Welcome, ${userName}!`,
     apiUsageMessage: (apiUsage) => `API Usage: ${apiUsage} requests`,
     freeCallsRemainingMessage: (freeCallsRemaining) => `Free Calls Remaining: ${freeCallsRemaining}`,
+    errormessage: 'Error loading API usage data. Please try again.',
 
     apiUsageTitle: "API Usage",
     userInputTitle: "User Input",

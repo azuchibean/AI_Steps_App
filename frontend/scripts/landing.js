@@ -19,7 +19,6 @@ function loadLandingPageContent(userData) {
     document.getElementById("user-input-section").querySelector("h2").textContent = messages.userInputTitle;
     document.getElementById("user-selection-section").querySelector("h2").textContent = messages.userSelectionTitle;
     document.getElementById("llm-response-section").querySelector("h2").textContent = messages.llmResponseTitle;
-    // document.getElementById("best-park-section").querySelector("h2").textContent = messages.bestParkTitle;
 
     // Populate placeholders for user selection and LLM response sections
     document.getElementById("user-selection").textContent = messages.userSelectionPlaceholder;
@@ -33,16 +32,11 @@ function loadLandingPageContent(userData) {
     const userInputSection = document.getElementById("user-input-section");
     loadInteractiveComponents(userData, userInputSection);
 
-    // // Load Section 5: Best Park Button (for testing)
-    // const bestParkSection = document.getElementById("best-park-button-container");
-    // loadBestParkButton(bestParkSection);
-
     console.log("Landing page content loaded successfully!");
 }
 
 
 async function loadConsumptionData(userId, apiUsageSection) {
-    console.log("userID: ", userId);
     try {
         // Send GET request to fetch API usage data for the user
         const response = await fetch(`${API_BASE_URL}/stats/apiUsage/${userId}`, {
@@ -58,29 +52,35 @@ async function loadConsumptionData(userId, apiUsageSection) {
 
         const apiUsageData = await response.json();
 
-        // Calculate total_api_calls and free_calls_remaining
-        const totalApiCalls = apiUsageData[0]?.total_api_calls || 0; // Fallback to 0 if no data is returned
-        const freeCallsRemaining = 20 - totalApiCalls; // Assuming a cap of 20 free calls
-
         // Display API Usage
         const usageMessageElement = document.createElement("p");
-        usageMessageElement.textContent = messages.apiUsageMessage(totalApiCalls);
+        usageMessageElement.textContent = messages.apiUsageMessage(apiUsageData.total_api_calls);
         apiUsageSection.appendChild(usageMessageElement);
 
         // Display Free Calls Remaining
-        const freeCallsRemainingUsageElement = document.createElement("p");
-        freeCallsRemainingUsageElement.textContent = messages.freeCallsRemainingMessage(freeCallsRemaining);
-        apiUsageSection.appendChild(freeCallsRemainingUsageElement);
+        const freeCallsRemainingElement = document.createElement("p");
+        freeCallsRemainingElement.textContent = messages.freeCallsRemainingMessage(
+            apiUsageData.free_calls_remaining
+        );
+        apiUsageSection.appendChild(freeCallsRemainingElement);
 
+        // Display a warning if present
+        if (apiUsageData.warning) {
+            const warningMessageElement = document.createElement("p");
+            warningMessageElement.textContent = apiUsageData.warning;
+            warningMessageElement.style.color = "red"; // Highlight the warning in red
+            apiUsageSection.appendChild(warningMessageElement);
+        }
     } catch (error) {
         console.error("Error loading API usage data:", error);
 
         // Display an error message
         const errorElement = document.createElement("p");
-        errorElement.textContent = "Error loading API usage data. Please try again.";
+        errorElement.textContent = messages.errormessage;
         apiUsageSection.appendChild(errorElement);
     }
 }
+
 
 
 
@@ -213,27 +213,6 @@ async function loadInteractiveComponents(userData, userInputSection) {
             const llmResponseDisplay = document.getElementById("llm-response");
             llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
         }
-
-        // // Add a POST button to the LLM Response section (outside the response block)
-        // let postButton = document.getElementById("post-response"); // Avoid duplicates
-        // if (!postButton) {
-        //     postButton = document.createElement("button");
-        //     postButton.id = "post-response";
-        //     postButton.textContent = messages.saveResponseButton;
-        //     const llmResponseSection = document.getElementById("llm-response-section");
-        //     llmResponseSection.appendChild(postButton); // Append the button to the section
-        // }
-
-        // // Handle POST button click
-        // postButton.addEventListener("click", () =>
-        //     postResponse({
-        //         user_id: userData.user, // now is email, need to fix the endpoint
-        //         location_from: userLocation,
-        //         location_to: llmResponse,
-        //         type: locationType,
-        //         distance: selectedSteps,
-        //     })
-        // );
     });
 }
 
@@ -348,70 +327,3 @@ function renderApiResponse(apiResponse, llmRecommendation) {
     llmRecommendationElement.textContent = llmRecommendation;
     llmResponseDisplay.appendChild(llmRecommendationElement);
 }
-
-
-
-// for sending POST request to save response/location to db
-// async function postResponse(postData) {
-//     console.log("Post Data:", postData);
-
-//     try {
-//         const postResponse = await fetch(`${API_BASE_URL}/post_endpoint`, {
-//             method: "POST",
-//             credentials: "include",
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify(postData),
-//         });
-
-//         if (!postResponse.ok) {
-//             throw new Error("Failed to post data to the server.");
-//         }
-
-//         const responseData = await postResponse.json();
-//         console.log("Post Response Data:", responseData);
-//         alert("Data posted successfully!");
-//     } catch (error) {
-//         console.error("Error posting data:", error);
-//         alert("Error posting data to the server.");
-//     }
-// }
-
-
-
-// // New function for "Best Park" button
-// function loadBestParkButton(contentDiv) {
-//     const generateButton = document.createElement('button');
-//     generateButton.textContent = "What is the best park in Vancouver?";
-//     contentDiv.appendChild(generateButton);
-
-//     const llmMessageDiv = document.createElement('div');
-//     contentDiv.appendChild(llmMessageDiv);
-
-//     generateButton.addEventListener('click', async () => {
-//         const llmMessageContent = await generate_llm_message();
-//         llmMessageDiv.innerHTML = llmMessageContent || "Error generating message.";
-//     });
-// }
-
-// // Temporary spot
-// async function generate_llm_message() {
-//     try {
-//         const response = await fetch(`${API_BASE_URL}/llm_test`, {
-//             method: "GET",
-//             credentials: "include",
-
-//         });
-
-//         if (!response.ok) {
-//             throw new Error("Failed to fetch data from server");
-//         }
-
-//         const data = await response.json();
-//         console.log("Received data:", data.response);
-//         return data.response;
-//     } catch (error) {
-//         console.error("Error:", error);
-//     }
-// }
