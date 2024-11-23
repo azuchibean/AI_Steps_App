@@ -61,21 +61,21 @@ select {
 
 
 /* table styling below --------------------------------------*/
-#endpoint-stats-title {
+#endpoint-stats-title, #user-api-consumption-table {
     margin-top: 0; 
 }
 
-#endpoint-stats {
+#endpoint-stats, #user-api-consumption {
     text-align: center;
 }
 
-#endpoint-stats-container {
+#endpoint-stats-container, #user-api-consumption-container {
     display: flex;
     flex-direction: column; 
     align-items: center;   
 }
 
-#endpoint-table {
+#endpoint-table, #user-api-table {
     border-collapse: collapse;
     width: 80%;
     text-align: left;
@@ -84,12 +84,13 @@ select {
 }
 
 #endpoint-table th,
-#endpoint-table td {
+#endpoint-table td, #user-api-table th,
+#user-api-table td {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-#endpoint-table th {
+#endpoint-table th, #user-api-table th {
     background-color: #4CAF50;
     color: white;
     text-align: center;

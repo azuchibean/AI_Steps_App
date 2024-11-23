@@ -1,7 +1,7 @@
 from fastapi import Request
 from utils.db_connection import get_db_connection, close_db_connection
 
-async def log_endpoint_stats(request: Request, call_next):
+async def log_endpoint_stats(request: Request):
     """
     Middleware to log each API request into the `endpoints` table.
     """
@@ -10,7 +10,7 @@ async def log_endpoint_stats(request: Request, call_next):
 
     # Skip logging for certain paths (e.g., static files, favicon, etc.)
     if path.startswith("/static") or path == "/favicon.ico" or request.method == "OPTIONS":
-        return await call_next(request)
+        return 
 
     # Log the request in the database
     connection = get_db_connection()
@@ -29,6 +29,29 @@ async def log_endpoint_stats(request: Request, call_next):
         cursor.close()
         close_db_connection(connection)
 
-    # Process the request and return the response
-    response = await call_next(request)
-    return response
+
+async def update_user_api_usage(user_id):
+    """
+    Updates the user's API usage in the `api_usage` table by increasing `total_api_calls`.
+    """
+
+    connection = get_db_connection()
+    try:
+        cursor = connection.cursor()
+
+        # Update the `api_usage` table for the specific user
+        query = """
+        INSERT INTO api_usage (user_id, total_api_calls)
+        VALUES (%s, 1)  
+        ON DUPLICATE KEY UPDATE total_api_calls = total_api_calls + 1
+        """
+        cursor.execute(query, (user_id,))
+        connection.commit()
+
+    except Exception as e:
+        print(f"Error updating `api_usage` table: {e}")
+    finally:
+        cursor.close()
+        close_db_connection(connection)
+
+

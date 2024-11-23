@@ -9,7 +9,7 @@ from utils.db_connection import get_db_connection, close_db_connection, create_u
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
 from datetime import timedelta
 import requests 
-from utils.request_logger import log_endpoint_stats
+from utils.request_logger import log_endpoint_stats, update_user_api_usage
 from model_handler import llm_run
 
 app = FastAPI()
@@ -24,8 +24,32 @@ app.add_middleware(
 )
 
 # log api call
-app.middleware("http")(log_endpoint_stats)
+@app.middleware("http")
+async def log_request_and_update_usage(request: Request, call_next):
+    """
+    Middleware that logs the request to the `endpoints` table
+    and updates the user's API usage in the `api_usage` table.
+    """
+    # Check if the request contains a valid user (auth token)
+    user = None
+    try:
+        user = await get_current_user(request)  
+    except HTTPException:
+        pass
 
+    if user:
+        # If the user is authenticated, proceed with logging and updating usage
+        user_id = user["id"]
+        
+        # Log the request to the `endpoints` table
+        await log_endpoint_stats(request)
+        
+        # Update the user's API usage in the `api_usage` table
+        await update_user_api_usage(user_id)
+
+    # Process the request and return the response
+    response = await call_next(request)
+    return response
 
 
 # Preflight Handler 

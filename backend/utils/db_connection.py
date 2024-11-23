@@ -153,9 +153,8 @@ def create_api_usage_table(connection):
         create_table_query = """
         CREATE TABLE IF NOT EXISTS api_usage (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
+        user_id INT NOT NULL UNIQUE,
         total_api_calls INT DEFAULT 0,
-        api_calls_remaining INT DEFAULT 20,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
         """
