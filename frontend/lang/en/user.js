@@ -1,5 +1,6 @@
 const messages = {
-    adminPageMessage: 'Welcome to admin page',
+    adminPageMessage: 'Welcome, Admin!',
+    endpointStatistics: 'Endpoint Statistics',
     landingPageMessage: 'Landing Page',
     landingPageWelcome: (userName) => `Welcome, ${userName}!`,
     apiUsageMessage: (apiUsage) => `API Usage: ${apiUsage} requests`,

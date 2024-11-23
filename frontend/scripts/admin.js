@@ -1,9 +1,83 @@
 function loadAdminPageContent(){
-    const contentDiv = document.getElementById("adminContent"); // Get the content div
+    const contentDiv = document.getElementById("content"); // Get the content div
     contentDiv.style.display = "block"; // Ensure the content div is visible
 
     const adminPageMessageElement = document.createElement('h1');
     adminPageMessageElement.textContent = messages.adminPageMessage;
     contentDiv.appendChild(adminPageMessageElement);
+
+    //load Section 1: endpoint stats 
+    loadEndpointStats();
+
+    //load Section 2: api usage stats
+    loadApiUsageStats();
  
 };
+
+//gets the endpoints data from endpoints table 
+async function loadEndpointStats() {
+    try {
+        const endpointStatsResponse = await fetch(`${API_BASE_URL}/stats/endpoints`, {
+            method: "GET",
+            credentials: "include",
+            headers: { "Accept": "application/json" },
+        });
+
+        const endpointStats = await endpointStatsResponse.json();
+        console.log(endpointStats)
+        renderEndpointStats(endpointStats); //call render to display data
+
+    } catch (error) {
+        console.error("Error loading endpoint stats content:", error);
+    }
+}
+
+//displays the data into the table
+function renderEndpointStats(stats) {
+    const tableBody = document.querySelector("#endpoint-table tbody");
+    tableBody.innerHTML = ""; // Clear any existing data
+
+    stats.forEach((stat) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${stat.method}</td>
+            <td>${stat.endpoint}</td>
+            <td>${stat.count}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+//gets the api usage data form api_usage table
+async function loadApiUsageStats(){
+    try {
+        const apiUsageStatsResponse = await fetch(`${API_BASE_URL}/stats/apiUsage`, {
+            method: "GET",
+            credentials: "include",
+            headers: { "Accept": "application/json" },
+        });
+
+        const apiUsageStats = await apiUsageStatsResponse.json();
+        console.log(apiUsageStats);
+        renderApiUsageStats(apiUsageStats);  // Call render function to display the data
+
+    } catch (error) {
+        console.error("Error loading API usage stats content:", error);
+    }
+}
+
+//displays the data into the table
+function renderApiUsageStats(stats) {
+    const tableBody = document.querySelector("#user-api-table tbody"); 
+    tableBody.innerHTML = ""; // Clear any existing data
+
+    stats.forEach((stat) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${stat.first_name}</td>
+            <td>${stat.email}</td>
+            <td>${stat.total_api_calls}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}

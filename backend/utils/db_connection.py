@@ -98,3 +98,113 @@ def close_db_connection(connection):
     if connection.is_connected():
         connection.close()
         print("MySQL connection closed")
+        
+def create_endpoint_table(connection):
+    """Creates the endpoints table if it does not already exist."""
+    cursor = connection.cursor()
+    try:
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS endpoints (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        method VARCHAR(10) NOT NULL,
+        endpoint VARCHAR(255) NOT NULL,
+        count INT DEFAULT 0,
+        UNIQUE (method, endpoint)
+        )
+        """
+        cursor.execute(create_table_query)
+        connection.commit()
+        print("Endpoints table created")
+    except Error as e:
+        print("Error creating table", e)
+        return None
+    finally:
+        cursor.close() 
+
+def get_endpoint_stats_from_db(connection):
+    """
+    Endpoint to get stats for all logged endpoints.
+    Returns a list of endpoint statistics.
+    """
+    try:
+        cursor = connection.cursor()
+        query = "SELECT method, endpoint, count FROM endpoints"
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        # If no data is found, return an empty list
+        if not result:
+            raise HTTPException(status_code=404, detail="No endpoint stats found")
+
+        # Prepare the response data
+        stats = [{"method": row[0], "endpoint": row[1], "count": row[2]} for row in result]
+
+        return stats 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching endpoint stats: {e}")
+    finally:
+        cursor.close()
+        close_db_connection(connection)
+        
+def create_api_usage_table(connection):
+    """Creates the api usage table if it does not already exist."""
+    cursor = connection.cursor()
+    try:
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS api_usage (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        total_api_calls INT DEFAULT 0,
+        api_calls_remaining INT DEFAULT 20,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+        """
+        cursor.execute(create_table_query)
+        connection.commit()
+        print("Usage table created")
+    except Error as e:
+        print("Error creating table", e)
+        return None
+    finally:
+        cursor.close() 
+        
+def initialize_usage_record(connection, user_id):
+    """Inserts new user into api usage table"""
+    cursor = connection.cursor()
+    try:
+        insert_query = """
+        INSERT INTO api_usage (user_id) VALUES (%s)
+        """
+        cursor.execute(insert_query, (user_id,))
+        connection.commit()
+        print(f"Initialized usage record for user_id {user_id}")
+    except Error as e:
+        print("Error initializing usage record:", e)
+        connection.rollback()
+    finally:
+        cursor.close()
+
+def get_api_usage_data(connection):
+    """Fetch API usage data with user details."""
+    cursor = connection.cursor(dictionary=True)
+    try:
+        query = """
+        SELECT 
+            users.first_name, 
+            users.email, 
+            api_usage.total_api_calls
+        FROM 
+            api_usage
+        JOIN 
+            users 
+        ON 
+            api_usage.user_id = users.id
+        """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+    except Error as e:
+        print("Error fetching API usage data:", e)
+        return []
+    finally:
+        cursor.close()

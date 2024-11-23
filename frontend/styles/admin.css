@@ -59,19 +59,38 @@ select {
     font-size: 1rem;
 }
 
-p {
-    margin: 10px 0;
+
+/* table styling below --------------------------------------*/
+#endpoint-stats-title {
+    margin-top: 0; 
 }
 
-#steps-buttons button {
-    margin-right: 10px;
-    margin-bottom: 10px;
+#endpoint-stats {
+    text-align: center;
 }
 
-.step-button.selected {
-    background-color: #2e7d32; /* Darker green for the selected button */
+#endpoint-stats-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;   
 }
 
-#best-park-section {
+#endpoint-table {
+    border-collapse: collapse;
+    width: 80%;
+    text-align: left;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#endpoint-table th,
+#endpoint-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#endpoint-table th {
+    background-color: #4CAF50;
+    color: white;
     text-align: center;
 }

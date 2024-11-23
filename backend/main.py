@@ -6,10 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from model_handler import llm_test
 from utils.models.models import RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
-from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password
+from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
 from datetime import timedelta
 import requests 
+from utils.request_logger import log_endpoint_stats
 
 app = FastAPI()
 
@@ -21,6 +22,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# log api call
+app.middleware("http")(log_endpoint_stats)
+
 
 
 # Preflight Handler 
@@ -102,6 +107,12 @@ async def register_user(request: RegisterRequest):
     try:
         # Insert the user into the database
         insert_user(db, request.first_name, request.email, hashed_password)
+        
+        # Get the user_id of the newly inserted user
+        user = get_user_by_email(db, request.email)
+        if user:
+            user_id = user["id"]
+            initialize_usage_record(db, user_id)    # initialize the user in api usage table
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
@@ -240,9 +251,31 @@ async def logout(response: Response):
     return {"message": "Logged out successfully"}
 
 
+@app.get("/stats/endpoints")
+async def get_endpoint_stats():
+    """Endpoint to get the count of all endpoints."""
+    # Connect to the database
+    db = get_db_connection()
+    if not db:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+    
+    result = get_endpoint_stats_from_db(db)
+    return result
 
-#Creates user table if it doesn't exist
-def main():
+@app.get("/stats/apiUsage")
+async def usage_data():
+    """Endpoint to get the api usage of all users."""
+    # Connect to the database
+    db = get_db_connection()
+    if not db:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+    
+    result = get_api_usage_data(db)
+    return result 
+
+#Creates tables if it doesn't exist ON START UP
+@app.on_event("startup")
+async def on_startup():
     db = get_db_connection()
     if db is None:
         print("Failed to connect to database.")
@@ -250,6 +283,9 @@ def main():
 
     try:
         create_user_table(db)
+        create_endpoint_table(db)
+        create_api_usage_table(db)
+        
 
     except Error as e:
         print(f"The error '{e}' occurred")
