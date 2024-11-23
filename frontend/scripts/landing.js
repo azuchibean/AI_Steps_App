@@ -27,7 +27,7 @@ function loadLandingPageContent(userData) {
 
     // Load Section 1: API Usage
     const apiUsageSection = document.getElementById("api-usage-content");
-    loadConsumptionData(userData, apiUsageSection);
+    loadConsumptionData(userData.user_id, apiUsageSection);
 
     // Load Section 2: User Input
     const userInputSection = document.getElementById("user-input-section");
@@ -41,18 +41,47 @@ function loadLandingPageContent(userData) {
 }
 
 
-async function loadConsumptionData(userData, apiUsageSection) {
-    const apiUsage = userData.total_api_calls;
-    const freeCallsRemaining = userData.free_api_calls_remaining;
+async function loadConsumptionData(userId, apiUsageSection) {
+    console.log("userID: ", userId);
+    try {
+        // Send GET request to fetch API usage data for the user
+        const response = await fetch(`${API_BASE_URL}/stats/apiUsage/${userId}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        });
 
-    const usageMessageElement = document.createElement("p");
-    usageMessageElement.textContent = messages.apiUsageMessage(apiUsage);
-    apiUsageSection.appendChild(usageMessageElement);
+        if (!response.ok) {
+            throw new Error("Failed to fetch API usage data");
+        }
 
-    const freeCallsRemainingUsageElement = document.createElement("p");
-    freeCallsRemainingUsageElement.textContent = messages.freeCallsRemainingMessage(freeCallsRemaining);
-    apiUsageSection.appendChild(freeCallsRemainingUsageElement);
+        const apiUsageData = await response.json();
+
+        // Calculate total_api_calls and free_calls_remaining
+        const totalApiCalls = apiUsageData[0]?.total_api_calls || 0; // Fallback to 0 if no data is returned
+        const freeCallsRemaining = 20 - totalApiCalls; // Assuming a cap of 20 free calls
+
+        // Display API Usage
+        const usageMessageElement = document.createElement("p");
+        usageMessageElement.textContent = messages.apiUsageMessage(totalApiCalls);
+        apiUsageSection.appendChild(usageMessageElement);
+
+        // Display Free Calls Remaining
+        const freeCallsRemainingUsageElement = document.createElement("p");
+        freeCallsRemainingUsageElement.textContent = messages.freeCallsRemainingMessage(freeCallsRemaining);
+        apiUsageSection.appendChild(freeCallsRemainingUsageElement);
+
+    } catch (error) {
+        console.error("Error loading API usage data:", error);
+
+        // Display an error message
+        const errorElement = document.createElement("p");
+        errorElement.textContent = "Error loading API usage data. Please try again.";
+        apiUsageSection.appendChild(errorElement);
+    }
 }
+
 
 
 async function loadInteractiveComponents(userData, userInputSection) {

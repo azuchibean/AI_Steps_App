@@ -207,3 +207,21 @@ def get_api_usage_data(connection):
         return []
     finally:
         cursor.close()
+
+
+def get_api_usage_data_for_user(connection, user_id):
+    """Fetch API usage data for a specific user."""
+    cursor = connection.cursor(dictionary=True)
+    try:
+        query = """
+            SELECT * FROM api_usage
+            WHERE user_id = %s
+        """
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchall()
+        return result
+    except Error as e:
+        print("Error fetching API usage data for user:", e)
+        return []
+    finally:
+        cursor.close()

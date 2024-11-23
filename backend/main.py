@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from utils.models.models import LocationDetails, RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
-from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data
+from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user
 from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
 from datetime import timedelta
 import requests 
@@ -305,6 +305,20 @@ async def usage_data():
     
     result = get_api_usage_data(db)
     return result 
+
+@app.get("/stats/apiUsage/{user_id}")
+async def usage_data_for_user(user_id: int):
+    """Endpoint to get the API usage for a specific user."""
+    # Connect to the database
+    db = get_db_connection()
+    if not db:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+
+    result = get_api_usage_data_for_user(db, user_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found or no API usage data available")
+    return result
+
 
 #Creates tables if it doesn't exist ON START UP
 @app.on_event("startup")
