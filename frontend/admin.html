@@ -7,47 +7,18 @@
     <title>Admin</title>
     <link rel="stylesheet" href="styles/admin.css">
 
-    <script>
-
-        // const API_BASE_URL = "http://127.0.0.1:8000";                    // in dev branch for testing
-        const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // in main branch for deployment
-
-        // Immediately Invoked Function Expression (IIFE)
-        (async () => {
-
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/verify-token`, {
-                    method: "GET",
-                    credentials: "include", // Include cookies
-                    headers: {
-                        "Accept": "application/json"
-                    }
-                });
-
-                if (!response.ok) {
-                    window.location.href = "login.html";
-                    console.log("response is not ok")
-                    return;
-                }
-
-                const data = await response.json();
-
-                if (!data.isAdmin) {
-                    window.location.href = "landing.html";
-                    console.log("not admin")
-                    return;
-                }
-
-
-            } catch (error) {
-                console.error("Error validating token:", error);
-                window.location.href = "login.html";
+    <script type="module">
+        import auth from './scripts/auth.js';
+        
+        // Verify token and check admin status
+        auth.verifyTokenAndRoute('admin').then(userData => {
+            if (userData) {
+                // Initialize your admin page content here
+                console.log('Admin verified, proceeding with page load');
             }
-        })(); // IIFE ends here
-
+        });
     </script>
-
+    
 </head>
 
 

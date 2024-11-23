@@ -6,55 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="./styles/profile.css">
+    
 
-    <script>
-        const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";
-
-        // Fetch user profile on page load
-        (async () => {
-            try {
-                const response = await fetch(`${API_BASE_URL}/verify-token`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: { "Accept": "application/json" }
-                });
-
-                if (!response.ok) {
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                const data = await response.json();
-                document.getElementById("user-name").textContent = data.first_name;
-                document.getElementById("user-email").textContent = data.user;
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                window.location.href = "login.html";
+    <script type="module">
+        import auth from './scripts/auth.js';
+        
+        // Verify token and load profile data
+        auth.verifyTokenAndRoute().then(userData => {
+            if (userData) {
+                // Update profile information
+                document.getElementById("user-name").textContent = userData.first_name;
+                document.getElementById("user-email").textContent = userData.user;
             }
-        })();
-
-        // Handle account deletion
-        async function deleteAccount() {
-            if (confirm("Are you sure you want to delete your account? This action is irreversible.")) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/delete-account`, {
-                        method: "DELETE",
-                        credentials: "include"
-                    });
-
-                    if (response.ok) {
-                        alert("Account deleted successfully.");
-                        window.location.href = "login.html";
-                    } else {
-                        const errorData = await response.json();
-                        alert(`Error: ${errorData.detail}`);
-                    }
-                } catch (error) {
-                    console.error("Error deleting account:", error);
-                }
-            }
-        }
+        });
     </script>
+    
 </head>
 
 <body>
@@ -74,6 +40,8 @@
         <p><strong>Email:</strong> <span id="user-email"></span></p>
         <button id="delete-account-button" onclick="deleteAccount()">Delete Account</button>
     </div>
+
+    <script src="./scripts/app.js"></script>
 </body>
 
 </html>
