@@ -275,18 +275,8 @@ async def llm_start(request: LocationDetails):
     steps = request.steps
     location_type = request.location_type
 
-    response = llm_run(latitude, longitude, height, steps, location_type)
-    
-    # update LLM API calls 
-    user = get_current_user(request)
-    user_id = user["id"]
-    connection = get_db_connection()
-    if connection:
-        try:
-            update_llm_api_calls(connection, user_id)
-        finally:
-            connection.close() 
-            
+    response = llm_run(latitude, longitude, height, steps, location_type)  
+
     return {"response": response}
 
 @app.post("/logout")
