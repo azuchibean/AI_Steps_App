@@ -19,8 +19,9 @@ const messages = {
     locationNotSupported: 'Geolocation is not supported by your browser.',
     submitButton: 'Submit',
     saveResponseButton: 'Save Response',
-    selectedMessage: (steps, type, lat, lon) =>
-        `Selected: ${steps}<br>Location Type: ${type}<br>Location: Latitude ${lat}, Longitude ${lon}`,
+    selectedMessage: (steps, type, lat, lon, h) =>
+        `Selected: ${steps} Steps<br>Location Type: ${type}<br>Your Height: ${h}<br>Location: Latitude ${lat}, Longitude ${lon}`,
     llmResponseError: 'Error generating LLM message.',
+    heightValidationError: 'Please enter a valid positive integer for height.',
 
 };

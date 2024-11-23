@@ -3,12 +3,20 @@ from transformers import pipeline
 import torch
 import os
 from dotenv import load_dotenv
+from location_finder import location_finder
 
 load_dotenv()
 hf_token = os.getenv("HUGGING_FACE_TOKEN")
 
 
-def llm_test():
+def llm_run(latitude, longitude, height, steps, location_type):
+
+    api_results = location_finder(latitude, longitude, height, steps, location_type)
+
+    if not api_results:
+        raise ValueError(
+            "No results found from location_finder. Please check the inputs."
+        )
 
     model_id = "deepset/roberta-base-squad2"
 
@@ -18,18 +26,20 @@ def llm_test():
         tokenizer=model_id,
     )
 
+    question = f'Which location is the best option? The highest-rated park among the following options should be selected.'
 
-    
-    question = "According to the context, which park is the furthest away and therefore the best to visit?"
+    context = f"There are several {location_type} including:\n"
 
-    context = """
-In Vancouver, there are several parks including Stanley Park that is 800 meters away, 
-Fraserview Park that is 620 meters away, Queen Elizabeth Park that is 910 meters away
+    for place in api_results:
+        context += f"- {place['name']} with a rating of {place['rating']}\n"
 
-The best park to visit is the one that has the greatest distance.
-"""
+    context += f"The best {location_type} to visit has the largest rating in terms of value."
 
+    llm_response = pipe(question=question, context=context)
 
-    response = pipe(question=question, context=context)
+    response = {
+        "api_response" : api_results,
+        "llm_recommendation" : llm_response["answer"]
+    }
 
-    return response["answer"]
+    return response
