@@ -215,7 +215,8 @@ def send_reset_email(email: str, reset_link: str):
             "from": f"Your App <mailgun@{MAILGUN_DOMAIN}>",
             "to": email,
             "subject": "Password Reset Request",
-            "text": f"Click the link to reset your password: {reset_link}"
+            "text": f"Click the link to reset your password",
+            "html": f'Click the link to reset your password: <a href="{reset_link}">{reset_link}</a>'
         }
     )
     print(response.status_code, response.text)  # Log the response to check for issues
