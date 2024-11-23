@@ -9,7 +9,7 @@ async def log_endpoint_stats(request: Request, call_next):
     path = request.url.path
 
     # Skip logging for certain paths (e.g., static files, favicon, etc.)
-    if path.startswith("/static") or path == "/favicon.ico":
+    if path.startswith("/static") or path == "/favicon.ico" or request.method == "OPTIONS":
         return await call_next(request)
 
     # Log the request in the database
