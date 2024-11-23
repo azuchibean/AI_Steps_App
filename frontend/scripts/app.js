@@ -1,5 +1,5 @@
-const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
-// const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
+// const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
+const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
 // Load Login Page Content
 function loadLoginPageContent() {
