@@ -164,16 +164,16 @@ async function loadInteractiveComponents(userData, userInputSection) {
         const googleMapsLink = `https://www.google.com/maps?q=${userLocation.latitude},${userLocation.longitude}`;
 
         userSelectionDisplay.innerHTML = `
-    ${messages.selectedMessage(
-            selectedSteps,
-            locationType,
-            userLocation.latitude,
-            userLocation.longitude,
-            heightInput
-        )}
-    <br>
-    <a href="${googleMapsLink}" target="_blank">View on Google Maps</a>
-`;
+            ${messages.selectedMessage(
+                    selectedSteps,
+                    locationType,
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    heightInput
+            )}
+            <br>
+            <a href="${googleMapsLink}" target="_blank">View on Google Maps</a>
+        `;
 
         // Section 4: Fetch and Display the LLM response
         const llmResponse = await generate_llm_message2(requestData);
