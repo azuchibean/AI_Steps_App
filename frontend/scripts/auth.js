@@ -36,11 +36,13 @@ class Auth {
                 window.location.href = "login.html";
             } else {
                 console.error("Logout failed:", response.statusText);
-                alert("Logout failed. Please try again.");
+                // alert("Logout failed. Please try again.");
+                alert(messages.logoutFailure);
             }
         } catch (error) {
             console.error("Error during logout:", error);
-            alert("An error occurred during logout. Please try again.");
+            // alert("An error occurred during logout. Please try again.");
+            logoutError(messages.logoutError);
         }
     }
 
@@ -106,12 +108,14 @@ class Auth {
                 return true;
             } else {
                 console.error("Failed to delete account:", response.statusText);
-                alert("Failed to delete account. Please try again.");
+                // alert("Failed to delete account. Please try again.");
+                alert(messages.deleteAccountFailure);
                 return false;
             }
         } catch (error) {
             console.error("Error deleting account:", error);
-            alert("An error occurred while deleting your account. Please try again.");
+            // alert("An error occurred while deleting your account. Please try again.");
+            alert(messages.deleteAccountError);
             return false;
         }
     }
@@ -132,17 +136,20 @@ class Auth {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
-                alert("Name updated successfully!");
+                // alert("Name updated successfully!");
+                alert(messages.updateNameSuccess);
                 return true;
             } else {
                 const error = await response.json();
                 console.error("Failed to update name:", error.detail);
-                alert(`Error updating name: ${error.detail}`);
+                // alert(`Error updating name: ${error.detail}`);
+                alert(messages.updateNameErrorDetail(error.detail));
                 return false;
             }
         } catch (error) {
             console.error("Error during name update:", error);
-            alert("An error occurred. Please try again.");
+            // alert("An error occurred. Please try again.");
+            alert(messages.genericError);
             return false;
         }
     }
