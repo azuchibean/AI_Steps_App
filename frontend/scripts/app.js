@@ -1,6 +1,8 @@
 const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
 //const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
+
+
 // Load Login Page Content
 function loadLoginPageContent() {
     const loginForm = document.getElementById("loginForm");
@@ -84,6 +86,12 @@ function loadRegisterPageContent() {
         });
     }
 }
+
+// Define navigateTo globally
+window.navigateTo = function (page) {
+    window.location.href = page;
+};
+
 
 
 // On Page Load: Check URL and Load Relevant Page Content

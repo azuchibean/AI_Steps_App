@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="styles/navbar.css">
 
     <script type="module">
         import auth from './scripts/auth.js';
@@ -17,6 +18,8 @@
                 console.log('Admin verified, proceeding with page load');
             }
         });
+
+        
     </script>
     
 </head>
@@ -26,9 +29,9 @@
 
     <nav id="navbar">
         <ul>
-            <li><a href="admin.html">Home</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            <li><button id="logout-button">Logout</button></li>
+            <li><button class="nav-button" onclick="navigateTo('landing.html')">Home</button></li>
+            <li><button class="nav-button" onclick="navigateTo('profile.html')">Profile</button></li>
+            <li><button id="logout-button" class="nav-button">Logout</button></li>
         </ul>
     </nav>
 

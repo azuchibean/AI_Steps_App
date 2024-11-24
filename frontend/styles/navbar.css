@@ -1,0 +1,41 @@
+/* Navbar container */
+#navbar {
+    background-color: #333;
+    display: flex;
+    justify-content: flex-end; /* Align all items to the right */
+    align-items: center; /* Vertically align items */
+    padding: 20px 20px;
+}
+
+/* Navbar list */
+#navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+/* Navbar list items */
+#navbar ul li {
+    margin: 0 10px; /* Add spacing between buttons */
+}
+
+/* Buttons in the navbar */
+.nav-button {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for buttons */
+.nav-button:hover {
+    background-color: #575757; /* Darker gray for hover effect */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
