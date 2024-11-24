@@ -31,6 +31,10 @@ async def log_request_and_update_usage(request: Request, call_next):
     Middleware that logs the request to the `endpoints` table
     and updates the user's API usage in the `api_usage` table.
     """
+    
+    # Log the request to the `endpoints` table
+    await log_endpoint_stats(request)
+        
     # Check if the request contains a valid user (auth token)
     user = None
     try:
@@ -42,15 +46,11 @@ async def log_request_and_update_usage(request: Request, call_next):
         # If the user is authenticated, proceed with logging and updating usage
         user_id = user["id"]
         
-        # Log the request to the `endpoints` table
-        await log_endpoint_stats(request)
-        
         # Update the user's API usage in the `api_usage` table
         await update_user_api_usage(user_id)
         
-        if request.url.path == '/llm' and request.method == 'POST':
+        if request.url.path == '/api/v1/llm' and request.method == 'POST':
             await update_llm_api_calls(user_id)
-        
         
     # Process the request and return the response
     response = await call_next(request)
@@ -114,7 +114,7 @@ async def read_root():
     return {"message": "My app is running!"}
 
 # Register endpoint
-@app.post("/register")
+@app.post("/api/v1/register")
 async def register_user(request: RegisterRequest):
      # Connect to the database
     db = get_db_connection()
@@ -152,7 +152,7 @@ async def register_user(request: RegisterRequest):
 
 
 # Login endpoint
-@app.post("/login")
+@app.post("/api/v1/login")
 async def login(request: LoginRequest, response: Response):
     # Connect to the database
     db = get_db_connection()
@@ -191,7 +191,7 @@ async def login(request: LoginRequest, response: Response):
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
 
 # Verify token endpoint
-@app.get("/verify-token")
+@app.get("/api/v1/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
     return {
         "message": "Token is valid",
@@ -229,7 +229,7 @@ def send_reset_email(email: str, reset_link: str):
 
 
 
-@app.post("/request-password-reset")
+@app.post("/api/v1/request-password-reset")
 async def request_password_reset(request: PasswordResetRequest, background_tasks: BackgroundTasks):
     # Verify if the email exists in the database
     db = get_db_connection()
@@ -249,7 +249,7 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
     return {"message": "Password reset link has been sent to your email"}
 
 
-@app.post("/reset-password")
+@app.post("/api/v1/reset-password")
 async def reset_password(request: PasswordReset):
     try:
         # Decode the token
@@ -277,7 +277,7 @@ async def reset_password(request: PasswordReset):
 # Supported types: https://developers.google.com/maps/documentation/places/web-service/supported_types
 # Returns json with two fields: api_response and llm_response. api_response has three objects, while llm_response is response chosen by llm.
 # Add text to highlight the one chosen by llm as "recommended" when display on front-end
-@app.post("/llm")
+@app.post("/api/v1/llm")
 async def llm_start(request: LocationDetails):
     latitude = request.latitude
     longitude = request.longitude
@@ -289,13 +289,13 @@ async def llm_start(request: LocationDetails):
 
     return {"response": response}
 
-@app.post("/logout")
+@app.post("/api/v1/logout")
 async def logout(response: Response):
     response.delete_cookie("access_token")
     return {"message": "Logged out successfully"}
 
 
-@app.get("/stats/endpoints")
+@app.get("/api/v1/stats/endpoints")
 async def get_endpoint_stats():
     """Endpoint to get the count of all endpoints."""
     # Connect to the database
@@ -306,7 +306,7 @@ async def get_endpoint_stats():
     result = get_endpoint_stats_from_db(db)
     return result
 
-@app.get("/stats/apiUsage")
+@app.get("/api/v1/stats/apiUsage")
 async def usage_data():
     """Endpoint to get the api usage of all users."""
     # Connect to the database
@@ -317,7 +317,7 @@ async def usage_data():
     result = get_api_usage_data(db)
     return result 
 
-@app.get("/stats/apiUsage/{user_id}")
+@app.get("/api/v1/stats/apiUsage/{user_id}")
 async def usage_data_for_user(user_id: int):
     """Endpoint to get the API usage for a specific user."""
     # Connect to the database
@@ -352,7 +352,7 @@ async def on_startup():
         close_db_connection(db) 
 
 
-@app.delete("/delete-account")
+@app.delete("/api/v1/delete-account")
 async def delete_account(response: Response, current_user: dict = Depends(get_current_user)):
     # Get the user's ID from the current_user
     user_id = current_user["id"]
@@ -378,7 +378,7 @@ async def delete_account(response: Response, current_user: dict = Depends(get_cu
 
 
 
-@app.put("/update-name")
+@app.put("/api/v1/update-name")
 async def update_name(new_name: str = Body(..., embed=True), current_user: dict = Depends(get_current_user)):
     """
     Updates the user's name in the database.

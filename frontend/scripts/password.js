@@ -14,7 +14,7 @@ function loadForgotPasswordPageContent() {
             messageElement.textContent = "Sending reset link...";
 
             try {
-                const response = await fetch(`${API_BASE_URL}/request-password-reset`, {
+                const response = await fetch(`${API_BASE_URL}/api/v1/request-password-reset`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ function loadResetPasswordPageContent() {
             const newPassword = document.getElementById("resetNewPassword").value;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/reset-password`, {
+                const response = await fetch(`${API_BASE_URL}/api/v1/reset-password`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

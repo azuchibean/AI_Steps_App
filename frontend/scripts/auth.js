@@ -22,7 +22,7 @@ class Auth {
         console.log("Logout initiated");
         
         try {
-            const response = await fetch(`${API_BASE_URL}/logout`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/logout`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -49,7 +49,7 @@ class Auth {
     // Verify token and handle routing based on user role
     async verifyTokenAndRoute(requiredRole = null) {
         try {
-            const response = await fetch(`${API_BASE_URL}/verify-token`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/verify-token`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -94,7 +94,7 @@ class Auth {
 
     async deleteAccount() {
         try {
-            const response = await fetch(`${API_BASE_URL}/delete-account`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/delete-account`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -123,7 +123,7 @@ class Auth {
 
     async updateName(newName) {
         try {
-            const response = await fetch(`${API_BASE_URL}/update-name`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/update-name`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
