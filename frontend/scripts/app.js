@@ -17,7 +17,7 @@ function loadLoginPageContent() {
             loginMessage.textContent = messages.loggingIn;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/login`, {
+                const response = await fetch(`${API_BASE_URL}/api/v1/login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function loadRegisterPageContent() {
             registerMessage.textContent = messages.registering;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/register`, {
+                const response = await fetch(`${API_BASE_URL}/api/v1/register`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

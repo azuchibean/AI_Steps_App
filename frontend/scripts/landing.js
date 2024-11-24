@@ -38,7 +38,7 @@ function loadLandingPageContent(userData) {
 async function loadConsumptionData(userId, apiUsageSection) {
     try {
         // Send GET request to fetch API usage data for the user
-        const response = await fetch(`${API_BASE_URL}/stats/apiUsage/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/stats/apiUsage/${userId}`, {
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -257,7 +257,7 @@ async function loadUserLocation(locationElement) {
 // for sending POST request to llm
 async function generate_llm_message2(requestData) {
     try {
-        const response = await fetch(`${API_BASE_URL}/llm`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/llm`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -360,7 +360,7 @@ function renderApiResponse(apiResponse, llmRecommendation) {
 async function updateApiUsage(userId) {
     try {
         // Send GET request to fetch the latest API usage data
-        const response = await fetch(`${API_BASE_URL}/stats/apiUsage/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/stats/apiUsage/${userId}`, {
             method: "GET",
             headers: {
                 "Accept": "application/json",

@@ -27,7 +27,7 @@ function loadAdminPageContent(){
 //gets the endpoints data from endpoints table 
 async function loadEndpointStats() {
     try {
-        const endpointStatsResponse = await fetch(`${API_BASE_URL}/stats/endpoints`, {
+        const endpointStatsResponse = await fetch(`${API_BASE_URL}/api/v1/stats/endpoints`, {
             method: "GET",
             credentials: "include",
             headers: { "Accept": "application/json" },
@@ -63,7 +63,7 @@ function renderEndpointStats(stats) {
 //gets the api usage data form api_usage table
 async function loadApiUsageStats(){
     try {
-        const apiUsageStatsResponse = await fetch(`${API_BASE_URL}/stats/apiUsage`, {
+        const apiUsageStatsResponse = await fetch(`${API_BASE_URL}/api/v1/stats/apiUsage`, {
             method: "GET",
             credentials: "include",
             headers: { "Accept": "application/json" },
