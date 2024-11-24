@@ -14,7 +14,6 @@ function loadLoginPageContent() {
             const password = document.getElementById("loginPassword").value;
             const loginMessage = document.getElementById("loginMessage");
 
-            // loginMessage.textContent = "Logging in...";
             loginMessage.textContent = messages.loggingIn;
 
             try {
@@ -29,11 +28,9 @@ function loadLoginPageContent() {
                 });
 
                 const data = await response.json();
-                // if (!response.ok) throw new Error(data.detail || "Login failed");
                 if (!response.ok) throw new Error(data.detail || messages.loginFailure);
 
                 loginMessage.style.color = "green";
-                // loginMessage.textContent = "Login successful!";
                 loginMessage.textContent = messages.loginSuccess;
 
                 // Redirect based on user role
@@ -62,7 +59,6 @@ function loadRegisterPageContent() {
             const password = document.getElementById("registerPassword").value;
             const registerMessage = document.getElementById("registerMessage");
 
-            // registerMessage.textContent = "Registering...";
             registerMessage.textContent = messages.registering;
 
             try {
@@ -79,7 +75,6 @@ function loadRegisterPageContent() {
                 if (!response.ok) throw new Error(data.detail || messages.registerFailure);
 
                 registerMessage.style.color = "green";
-                // registerMessage.textContent = "Registration successful!";
                 registerMessage.textContent = messages.registerSuccess;
                 setTimeout(() => {
                     window.location.href = "login.html";

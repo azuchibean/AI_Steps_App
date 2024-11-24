@@ -1,11 +1,13 @@
 const messages = {
     // app.js
     loggingIn: "Logging in...",
-    loginSuccess: "Login successful!",
     loginFailure: "Login failed.",
+    loginSuccess: "Login successful!",
     registering: "Registering...",
-    registerSuccess: "Registration successful!",
     registerFailure: "Registration failed.",
+    registerSuccess: "Registration successful!",
+
+    // password.js
     sendingResetLink: "Sending reset link...",
     resetLinkSent: "Reset link sent! Check your email.",
     resetLinkFailure: "Failed to send reset link.",
@@ -13,15 +15,16 @@ const messages = {
     genericErrorMessage: (errorDetail) => `Error: ${errorDetail}`,
 
     // Profile
-    deleteAccountConfirmation: "Are you sure you want to delete your account? This action cannot be undone.",
     invalidNameError: "Please enter a valid name.",
+    updateNameSuccess: "Name updated successfully!",
+    deleteAccountConfirmation: "Are you sure you want to delete your account? This action cannot be undone.",
+    deleteAccountSuccess: "Account deleted successfully!",
 
     // auth.js
     logoutFailure: "Logout failed. Please try again.",
     logoutError: "An error occurred during logout. Please try again.",
     deleteAccountFailure: "Failed to delete account. Please try again.",
     deleteAccountError: "An error occurred while deleting your account. Please try again.",
-    updateNameSuccess: "Name updated successfully!",
     updateNameErrorDetail: (detail) => `Error updating name: ${detail}`,
     genericError: "An error occurred. Please try again.",
 
@@ -70,7 +73,4 @@ const messages = {
     usageUsernameTitle: "Username",
     usageEmailTitle: "Email",
     usageTotalRequestsTitle: "Total requests",
-
-
-    
 };
