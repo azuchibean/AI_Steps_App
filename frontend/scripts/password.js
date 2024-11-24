@@ -10,8 +10,7 @@ function loadForgotPasswordPageContent() {
 
             const email = document.getElementById("forgotEmail").value;
             const messageElement = document.getElementById("forgotPasswordMessage");
-
-            messageElement.textContent = "Sending reset link...";
+            messageElement.textContent = messages.sendingResetLink;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/api/v1/request-password-reset`, {
@@ -25,9 +24,9 @@ function loadForgotPasswordPageContent() {
                 const data = await response.json();
                 if (response.ok) {
                     messageElement.style.color = "green";
-                    messageElement.textContent = "Reset link sent! Check your email.";
+                    messageElement.textContent = messages.resetLinkSent;
                 } else {
-                    throw new Error(data.detail || "Failed to send reset link.");
+                    throw new Error(data.detail || messages.resetLinkFailure);
                 }
             } catch (error) {
                 messageElement.style.color = "red";
@@ -63,10 +62,10 @@ function loadResetPasswordPageContent() {
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert("Password reset successful!");
+                    alert(messages.resetPasswordSuccess);
                     window.location.href = "login.html";
                 } else {
-                    alert("Error: " + data.detail);
+                    alert(messages.genericErrorMessage(data.detail));
                 }
             } catch (error) {
                 console.error("Error:", error);
@@ -74,7 +73,6 @@ function loadResetPasswordPageContent() {
         });
     }
 }
-
 
 
 // On Page Load: Check URL and Load Relevant Page Content

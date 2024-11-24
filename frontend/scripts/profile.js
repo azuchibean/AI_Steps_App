@@ -40,24 +40,24 @@ function setupEventListeners() {
         const newName = newNameInput.value.trim();
 
         if (!newName) {
-            alert('Please enter a valid name.');
+            alert(messages.invalidNameError);
             return;
         }
 
         const updated = await auth.updateName(newName);
         if (updated) {
             document.getElementById('user-name').textContent = newName;
-            alert('Name updated successfully!');
+            alert(messages.updateNameSuccess);
         }
     });
 
     // Delete Account Button
     const deleteAccountButton = document.getElementById('delete-account-button');
     deleteAccountButton.addEventListener('click', async () => {
-        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        if (confirm(messages.deleteAccountConfirmation)) {
             const success = await auth.deleteAccount();
             if (success) {
-                alert('Account deleted successfully.');
+                alert(messages.deleteAccountSuccess);
             }
         }
     });
