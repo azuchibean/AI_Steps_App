@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing</title>
     <link rel="stylesheet" href="styles/landing.css">
+    <link rel="stylesheet" href="styles/navbar.css">
     <script src="./lang/en/user.js"></script>
 
     <script type="module">
@@ -18,20 +19,18 @@
                 loadLandingPageContent(userData);
             }
         });
+
     </script>
     
     
 </head>
-
-
-
 <body>
 
     <nav id="navbar">
         <ul>
-            <li><a href="landing.html">Home</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            <li><button id="logout-button">Logout</button></li>
+            <li><button class="nav-button" onclick="navigateTo('landing.html')">Home</button></li>
+            <li><button class="nav-button" onclick="navigateTo('profile.html')">Profile</button></li>
+            <li><button id="logout-button" class="nav-button">Logout</button></li>
         </ul>
     </nav>
 

@@ -11,6 +11,7 @@ from datetime import timedelta
 import requests 
 from utils.request_logger import log_endpoint_stats, update_user_api_usage, update_llm_api_calls
 from model_handler import llm_run
+import html
 
 app = FastAPI()
 
@@ -203,18 +204,28 @@ async def verify_token(current_user: dict = Depends(get_current_user)):
     }
 
 def send_reset_email(email: str, reset_link: str):
+    
+
+    html_content = f"""
+    <html>
+        <body>
+         <p>We received a request to reset your password. Please click the link below to reset your password:</p>
+         <p><a href="{reset_link}" style="color: #0066cc; text-decoration: underline;">{reset_link}</a></p>
+        </body>
+    </html>
+
+    """
+
     response = requests.post(
-        f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
-        auth=("api", MAILGUN_API_KEY),
-        data={
-            "from": f"Your App <mailgun@{MAILGUN_DOMAIN}>",
-            "to": email,
-            "subject": "Password Reset Request",
-            "text": f"Click the link to reset your password",
-            "html": f'Click the link to reset your password: <a href="{reset_link}">{reset_link}</a>'
+    f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
+    auth=("api", MAILGUN_API_KEY),
+    data={
+        "from": f"Your App <mailgun@{MAILGUN_DOMAIN}>",
+        "to": email,
+        "subject": "Password Reset Request",
+        "html": html_content  
         }
     )
-    print(response.status_code, response.text)  # Log the response to check for issues
 
 
 
@@ -230,8 +241,7 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
 
     # Generate the password reset token
     token = create_password_reset_token(request.email)
-    reset_link = f"https://isa-project-frontend.netlify.app/reset-password.html?token={token}"  # Replace with your frontend URL
-    
+    reset_link = f"https://dn3aeuakeqz2h.cloudfront.net/reset-password.html?token={token}"  # Replace with your frontend URL
 
     # Send the email with the reset link (mocked here for demonstration)
     background_tasks.add_task(send_reset_email, user["email"], reset_link)

@@ -97,37 +97,4 @@ select {
 }
 
 
-/* Nav bar*/
-#navbar {
-    background-color: #333;
-    display: flex;
-    justify-content: flex-end; 
-    align-items: center; 
-    padding: 10px 20px;
-}
 
-#navbar ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-#navbar ul li {
-    padding: 10px;
-}
-
-#navbar a, #navbar button {
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    display: block;
-    border: none;
-    background: none;
-    cursor: pointer;
-}
-
-#navbar a:hover, #navbar button:hover {
-    background-color: #575757;
-    border-radius: 4px;
-}

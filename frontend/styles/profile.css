@@ -44,42 +44,6 @@ body {
 }
 
 
-/* Nav bar*/
-#navbar {
-    background-color: #333;
-    display: flex;
-    justify-content: flex-end; /* Align all items to the right */
-    align-items: center; /* Vertically align items */
-    padding: 10px 20px;
-}
-
-#navbar ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-#navbar ul li {
-    padding: 10px;
-}
-
-#navbar a, #navbar button {
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    display: block;
-    border: none;
-    background: none;
-    cursor: pointer;
-}
-
-#navbar a:hover, #navbar button:hover {
-    background-color: #575757;
-    border-radius: 4px;
-}
-
-
 /* Update Name Section */
 #update-name-container {
     margin-top: 30px;
@@ -120,4 +84,35 @@ body {
 
 #update-name-button:hover {
     background-color: #0056b3;
+}
+
+
+/* Spinner Container */
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    color: #555;
+}
+
+/* Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #4CAF50; /* Green spinner */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

@@ -1,6 +1,5 @@
-// auth.js
-// const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
-const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
+const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
+//const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
 class Auth {
     constructor() {
@@ -57,30 +56,33 @@ class Auth {
                     "Accept": "application/json"
                 }
             });
-
+    
             if (!response.ok) {
                 console.log("Token verification failed");
                 window.location.href = "login.html";
                 return null;
             }
-
+    
             const userData = await response.json();
             console.log("User data:", userData);
-
+    
             // Handle admin-only pages
             if (requiredRole === 'admin' && !userData.isAdmin) {
                 console.log("Admin access required but user is not admin");
                 window.location.href = "landing.html";
                 return null;
             }
-
-            // Handle regular user pages
+    
+            // Allow admins to access shared pages like profile.html
             if (requiredRole === 'user' && userData.isAdmin) {
-                console.log("User is admin, redirecting to admin page");
-                window.location.href = "admin.html";
-                return null;
+                const currentPage = window.location.pathname.split("/").pop();
+                if (currentPage !== "profile.html") {
+                    console.log("User is admin, redirecting to admin page");
+                    window.location.href = "admin.html";
+                    return null;
+                }
             }
-
+    
             return userData;
         } catch (error) {
             console.error("Error during token verification:", error);
@@ -88,6 +90,7 @@ class Auth {
             return null;
         }
     }
+    
 
     async deleteAccount() {
         try {
@@ -152,8 +155,6 @@ class Auth {
     }
     
 }
-
-
 
 // Create and export a single instance
 const auth = new Auth();

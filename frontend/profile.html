@@ -6,64 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="./styles/profile.css">
+    <link rel="stylesheet" href="styles/navbar.css">
     <script src="./lang/en/user.js"></script>
-
-    <script type="module">
-        import auth from './scripts/auth.js';
-
-        // Verify token and load profile data
-        auth.verifyTokenAndRoute().then(userData => {
-            if (userData) {
-                // Update profile information
-                document.getElementById("user-name").textContent = userData.first_name;
-                document.getElementById("user-email").textContent = userData.user;
-            }
-        });
-
-        // Add event listener to delete account button
-        document.addEventListener('DOMContentLoaded', () => {
-            const deleteButton = document.getElementById("delete-account-button");
-
-            deleteButton.addEventListener("click", () => {
-                // if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-                if (confirm(messages.deleteAccountConfirmation)) {
-                    auth.deleteAccount(); // Call the deleteAccount method from auth.js
-                }
-            });
-        });
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const updateNameButton = document.getElementById("update-name-button");
-            const newNameInput = document.getElementById("new-name");
-
-            updateNameButton.addEventListener("click", async () => {
-                const newName = newNameInput.value.trim();
-                if (newName) {
-                    const updated = await auth.updateName(newName);
-                    if (updated) {
-                        // Update the name displayed on the profile
-                        document.getElementById("user-name").textContent = newName;
-                    }
-                } else {
-                    // alert("Please enter a valid name.");
-                    alert(messages.invalidNameError);
-                }
-            });
-        }); 
-    </script>
+    <script type="module" src="./scripts/profile.js" defer></script>
 
 </head>
 
 <body>
 
+   <!-- Navbar -->
     <nav id="navbar">
         <ul>
-            <li><a href="landing.html">Home</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            <li><button id="logout-button">Logout</button></li>
+            <li><button class="nav-button" onclick="navigateTo('landing.html')">Home</button></li>
+            <li><button class="nav-button" onclick="navigateTo('profile.html')">Profile</button></li>
+            <li><button id="logout-button" class="nav-button">Logout</button></li>
         </ul>
     </nav>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="spinner-container">
+        <div class="spinner"></div>
+        <p>Loading Profile...</p>
+    </div>
 
     <!-- Profile Section -->
     <div id="profile-container">
@@ -76,7 +40,6 @@
             <input type="text" id="new-name" placeholder="Enter new name">
             <button id="update-name-button">Update Name</button>
         </div>
-
 
         <button id="delete-account-button">Delete Account</button>
     </div>
