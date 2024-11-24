@@ -17,7 +17,11 @@ app = FastAPI()
 # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware, 
+<<<<<<< HEAD
     allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app", "https://isa-project-frontend.onrender.com/", "https://isa-frontend-285df755bfe6.herokuapp.com", "https://dn3aeuakeqz2h.cloudfront.net"],  # Temporarily allow all origins for testing
+=======
+    allow_origins=["http://127.0.0.1:5500","https://isa-project-frontend.netlify.app", "https://isa-frontend-285df755bfe6.herokuapp.com", "https://steps-application.netlify.app"],  # Temporarily allow all origins for testing
+>>>>>>> victor_dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -110,7 +114,7 @@ async def get_current_user(request: Request):
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to my FastAPI application!"}
+    return {"message": "My app is running!"}
 
 # Register endpoint
 @app.post("/register")
@@ -189,8 +193,6 @@ async def login(request: LoginRequest, response: Response):
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
 
-
-
 # Verify token endpoint
 @app.get("/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
@@ -203,9 +205,6 @@ async def verify_token(current_user: dict = Depends(get_current_user)):
         "total_api_calls": current_user.get("total_api_calls", 0),
         "first_name": current_user.get("first_name", "")
     }
-    
-   
-
 
 def send_reset_email(email: str, reset_link: str):
     response = requests.post(
