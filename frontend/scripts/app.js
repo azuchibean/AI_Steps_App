@@ -12,7 +12,8 @@ function loadLoginPageContent() {
             const password = document.getElementById("loginPassword").value;
             const loginMessage = document.getElementById("loginMessage");
 
-            loginMessage.textContent = "Logging in...";
+            // loginMessage.textContent = "Logging in...";
+            loginMessage.textContent = messages.loggingIn;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/login`, {
@@ -26,10 +27,12 @@ function loadLoginPageContent() {
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.detail || "Login failed");
+                // if (!response.ok) throw new Error(data.detail || "Login failed");
+                if (!response.ok) throw new Error(data.detail || messages.loginFailure);
 
                 loginMessage.style.color = "green";
-                loginMessage.textContent = "Login successful!";
+                // loginMessage.textContent = "Login successful!";
+                loginMessage.textContent = messages.loginSuccess;
 
                 // Redirect based on user role
                 if (data.isAdmin) {
@@ -57,7 +60,8 @@ function loadRegisterPageContent() {
             const password = document.getElementById("registerPassword").value;
             const registerMessage = document.getElementById("registerMessage");
 
-            registerMessage.textContent = "Registering...";
+            // registerMessage.textContent = "Registering...";
+            registerMessage.textContent = messages.registering;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/register`, {
@@ -70,10 +74,11 @@ function loadRegisterPageContent() {
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.detail || "Registration failed");
+                if (!response.ok) throw new Error(data.detail || messages.registerFailure);
 
                 registerMessage.style.color = "green";
-                registerMessage.textContent = "Registration successful!";
+                // registerMessage.textContent = "Registration successful!";
+                registerMessage.textContent = messages.registerSuccess;
                 setTimeout(() => {
                     window.location.href = "login.html";
                 }, 500);
@@ -95,7 +100,8 @@ function loadForgotPasswordPageContent() {
             const email = document.getElementById("forgotEmail").value;
             const messageElement = document.getElementById("forgotPasswordMessage");
 
-            messageElement.textContent = "Sending reset link...";
+            // messageElement.textContent = "Sending reset link...";
+            messageElement.textContent = messages.sendingResetLink;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/request-password-reset`, {
@@ -109,9 +115,11 @@ function loadForgotPasswordPageContent() {
                 const data = await response.json();
                 if (response.ok) {
                     messageElement.style.color = "green";
-                    messageElement.textContent = "Reset link sent! Check your email.";
+                    // messageElement.textContent = "Reset link sent! Check your email.";
+                    messageElement.textContent = messages.resetLinkSent;
                 } else {
-                    throw new Error(data.detail || "Failed to send reset link.");
+                    // throw new Error(data.detail || "Failed to send reset link.");
+                    throw new Error(data.detail || messages.resetLinkFailure);
                 }
             } catch (error) {
                 messageElement.style.color = "red";
@@ -147,10 +155,12 @@ function loadResetPasswordPageContent() {
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert("Password reset successful!");
+                    // alert("Password reset successful!");
+                    alert(messages.resetPasswordSuccess);
                     window.location.href = "login.html";
                 } else {
-                    alert("Error: " + data.detail);
+                    // alert("Error: " + data.detail);
+                    alert(messages.genericErrorMessage(data.detail));
                 }
             } catch (error) {
                 console.error("Error:", error);
