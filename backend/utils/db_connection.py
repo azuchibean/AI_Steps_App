@@ -34,8 +34,6 @@ def create_user_table(connection):
         first_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password_hash VARCHAR(255) NOT NULL,
-        free_api_calls_remaining INT DEFAULT 20,
-        total_api_calls INT DEFAULT 0,
         is_admin BOOLEAN DEFAULT FALSE
         )
         """
