@@ -202,7 +202,24 @@ async function loadInteractiveComponents(userData, userInputSection) {
         `;
 
         // Section 4: Fetch and Display the LLM response
+        // const llmResponse = await generate_llm_message2(requestData);
+
+        // if (llmResponse && llmResponse.api_response) {
+        //     renderApiResponse(llmResponse.api_response, llmResponse.llm_recommendation);
+        // } else {
+        //     const llmResponseDisplay = document.getElementById("llm-response");
+        //     llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
+        // }
+
+            // Show the loading spinner in the LLM response section
+    showLoadingSpinner();
+
+    try {
+        // Section 4: Fetch and Display the LLM response
         const llmResponse = await generate_llm_message2(requestData);
+
+        // Hide the loading spinner after the API response
+        hideLoadingSpinner();
 
         if (llmResponse && llmResponse.api_response) {
             renderApiResponse(llmResponse.api_response, llmResponse.llm_recommendation);
@@ -210,6 +227,14 @@ async function loadInteractiveComponents(userData, userInputSection) {
             const llmResponseDisplay = document.getElementById("llm-response");
             llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
         }
+    } catch (error) {
+        console.error("Error generating LLM message:", error);
+
+        // Hide the spinner and display an error message
+        hideLoadingSpinner();
+        const llmResponseDisplay = document.getElementById("llm-response");
+        llmResponseDisplay.textContent = "An error occurred while fetching recommendations.";
+    }
 
 
         // Update the "API Usage" section with the latest data
@@ -265,6 +290,22 @@ async function generate_llm_message2(requestData) {
         console.error("Error generating LLM message:", error);
         return "Error generating LLM message.";
     }
+}
+
+// Add the loading spinner to the LLM response section
+function showLoadingSpinner() {
+    const llmResponseDisplay = document.getElementById("llm-response");
+    llmResponseDisplay.innerHTML = ""; // Clear any existing content
+
+    const spinner = document.createElement("div");
+    spinner.className = "spinner"; // Add the spinner CSS class
+    llmResponseDisplay.appendChild(spinner);
+}
+
+// Remove the loading spinner
+function hideLoadingSpinner() {
+    const llmResponseDisplay = document.getElementById("llm-response");
+    llmResponseDisplay.innerHTML = ""; // Clear the spinner or previous content
 }
 
 // Display the LLM response and LLM recommendation

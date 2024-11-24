@@ -10,7 +10,7 @@ const messages = {
     apiUsageTitle: "API Usage",
     userInputTitle: "User Input",
     userSelectionTitle: "Your Selection",
-    llmResponseTitle: "LLM Response",
+    llmResponseTitle: "Response",
     bestParkTitle: "Best Park",
     userSelectionPlaceholder: "Your selection will be displayed here.",
     llmResponsePlaceholder: "The response will be displayed here.",
@@ -28,7 +28,7 @@ const messages = {
     heightValidationError: 'Please enter a valid positive integer for height.',
 
     recommendationsTitle: "Recommended Locations:",
-    recommendationTitle: "Our top recommendation:",
+    recommendationTitle: "AI recommendation:",
     viewOnGoogleMaps: "View on Google Maps",
     addressLabel: "Address: ",
     distanceLabel: "Distance: ",
