@@ -215,7 +215,7 @@ def send_reset_email(email: str, reset_link: str):
     <html>
         <body>
          <p>We received a request to reset your password. Please click the link below to reset your password:</p>
-         <p><a href="{reset_link}" style="color: #0066cc; text-decoration: underline;">Reset Password</a></p>
+         <p><a href="{reset_link}" style="color: #0066cc; text-decoration: underline;">{reset_link}</a></p>
         </body>
     </html>
 
