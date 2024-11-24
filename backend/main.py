@@ -17,7 +17,7 @@ app = FastAPI()
 # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware, 
-    allow_origins=["http://127.0.0.1:5500", "https://dn3aeuakeqz2h.cloudfront.net"]  # Temporarily allow all origins for testing
+    allow_origins=["http://127.0.0.1:5500", "https://dn3aeuakeqz2h.cloudfront.net"],  # Temporarily allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
