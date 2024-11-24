@@ -35,7 +35,6 @@ function loadLandingPageContent(userData) {
     console.log("Landing page content loaded successfully!");
 }
 
-
 async function loadConsumptionData(userId, apiUsageSection) {
     try {
         // Send GET request to fetch API usage data for the user
@@ -201,47 +200,36 @@ async function loadInteractiveComponents(userData, userInputSection) {
             <a href="${googleMapsLink}" target="_blank">View on Google Maps</a>
         `;
 
-        // Section 4: Fetch and Display the LLM response
-        // const llmResponse = await generate_llm_message2(requestData);
+        // Show the loading spinner in the LLM response section
+        showLoadingSpinner();
 
-        // if (llmResponse && llmResponse.api_response) {
-        //     renderApiResponse(llmResponse.api_response, llmResponse.llm_recommendation);
-        // } else {
-        //     const llmResponseDisplay = document.getElementById("llm-response");
-        //     llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
-        // }
+        try {
+            // Section 4: Fetch and Display the LLM response
+            const llmResponse = await generate_llm_message2(requestData);
 
-            // Show the loading spinner in the LLM response section
-    showLoadingSpinner();
+            // Hide the loading spinner after the API response
+            hideLoadingSpinner();
 
-    try {
-        // Section 4: Fetch and Display the LLM response
-        const llmResponse = await generate_llm_message2(requestData);
+            if (llmResponse && llmResponse.api_response) {
+                renderApiResponse(llmResponse.api_response, llmResponse.llm_recommendation);
+            } else {
+                const llmResponseDisplay = document.getElementById("llm-response");
+                llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
+            }
+        } catch (error) {
+            console.error("Error generating LLM message:", error);
 
-        // Hide the loading spinner after the API response
-        hideLoadingSpinner();
-
-        if (llmResponse && llmResponse.api_response) {
-            renderApiResponse(llmResponse.api_response, llmResponse.llm_recommendation);
-        } else {
+            // Hide the spinner and display an error message
+            hideLoadingSpinner();
             const llmResponseDisplay = document.getElementById("llm-response");
-            llmResponseDisplay.textContent = messages.llmResponsePlaceholder || "No recommendations available.";
+            llmResponseDisplay.textContent = "An error occurred while fetching recommendations.";
         }
-    } catch (error) {
-        console.error("Error generating LLM message:", error);
-
-        // Hide the spinner and display an error message
-        hideLoadingSpinner();
-        const llmResponseDisplay = document.getElementById("llm-response");
-        llmResponseDisplay.textContent = "An error occurred while fetching recommendations.";
-    }
 
 
         // Update the "API Usage" section with the latest data
         await updateApiUsage(userData.user_id);
     });
 }
-
 
 // Request location from the user
 async function loadUserLocation(locationElement) {
@@ -265,7 +253,6 @@ async function loadUserLocation(locationElement) {
         }
     });
 }
-
 
 // for sending POST request to llm
 async function generate_llm_message2(requestData) {
@@ -369,7 +356,6 @@ function renderApiResponse(apiResponse, llmRecommendation) {
     llmRecommendationElement.textContent = llmRecommendation;
     llmResponseDisplay.appendChild(llmRecommendationElement);
 }
-
 
 async function updateApiUsage(userId) {
     try {
