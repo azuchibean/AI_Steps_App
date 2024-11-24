@@ -1,46 +1,118 @@
-/* General styles for the body */
+/* General Styling */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #faf7f7; /* Dark grey background */
+    color: #3e3d3d; /* Light text color */
+    line-height: 1.6;
+}
+
+/* Navbar container */
+#navbar {
+    background-color: #333;
+    display: flex;
+    justify-content: flex-end; /* Align all items to the right */
+    align-items: center; /* Vertically align items */
+    padding: 20px 20px;
+}
+
+/* Navbar list */
+#navbar ul {
+    list-style-type: none;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
 }
 
-/* Header styles */
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: #4CAF50;
+/* Navbar list items */
+#navbar ul li {
+    margin: 0 10px; /* Add spacing between buttons */
 }
 
-/* Links container */
-a {
-    text-decoration: none;
+/* Buttons in the navbar */
+.nav-button {
     color: white;
+    text-decoration: none;
     padding: 10px 20px;
-    margin: 10px;
-    background-color: #4CAF50;
-    border-radius: 5px;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+    border-radius: 4px;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-a:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+/* Hover effect for buttons */
+.nav-button:hover {
+    background-color: #575757; /* Darker gray for hover effect */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
-/* For links container */
-.link-container {
+/* Main Content */
+main {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Label Container */
+.label-container h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #4CAF50; /* Green color for emphasis */
+    margin-bottom: 30px;
+}
+
+/* Description Container */
+.description-container {
+    background-color: #e1dfdf; /* Slightly lighter grey for contrast */
+    padding: 40px;
+    margin: 0 auto;
+    width: 90%; /* Wide card */
+    max-width: 800px; /* Limit max width */
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Softer shadow for depth */
+}
+
+.description-container p {
+    font-size: 1.2rem;
+    color: #3d3b3b; /* Light grey text */
+    margin-bottom: 20px;
+}
+
+.description-container a {
+    color: #4CAF50; /* Green for links */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.description-container a:hover {
+    text-decoration: underline;
+}
+
+/* Button Container */
+.button-container {
     margin-top: 20px;
+}
+
+.button-container button {
+    background-color: #4CAF50; /* Green buttons */
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-container button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px); /* Slight lift effect */
 }

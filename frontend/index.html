@@ -7,10 +7,34 @@
     <link rel="stylesheet" href="styles/index.css">
     <script src="./scripts/app.js" defer></script>
 </head>
-<body>
-    <h1>Welcome to the App</h1>
-    <a href="login.html">Login</a> | <a href="register.html">Register</a>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <ul>
+        <li><button class="nav-button" onclick="navigateTo('login.html')">Login</button></li>
+        <li><button class="nav-button" onclick="navigateTo('register.html')">Register</button></li>
+    </ul>
+</nav>
 
 
-</body>
+    <!-- Main Content -->
+    <main>
+        <!-- Label Container -->
+        <div class="label-container">
+            <h1>Welcome to the App</h1>
+        </div>
+
+        <!-- Description Container -->
+        <div class="description-container">
+            <p>
+                Discover an AI-powered fitness experience tailored to your needs! 
+                Our app suggests unique destinations to walk to based on your current location and preferred distance.
+            </p>
+            <p>
+                Powered by advanced machine learning models like 
+                <a href="https://huggingface.co/deepset/roberta-base-squad2" target="_blank">RoBERTa-base-SQuAD2</a>, 
+                we make fitness fun, intelligent, and personalized.
+            </p>
+        </div>
+    </main>
 </html>
