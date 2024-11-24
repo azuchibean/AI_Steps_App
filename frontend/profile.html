@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="./styles/profile.css">
-    
+    <script src="./lang/en/user.js"></script>
 
     <script type="module">
         import auth from './scripts/auth.js';
-        
+
         // Verify token and load profile data
         auth.verifyTokenAndRoute().then(userData => {
             if (userData) {
@@ -20,44 +20,43 @@
             }
         });
 
-         // Add event listener to delete account button
+        // Add event listener to delete account button
         document.addEventListener('DOMContentLoaded', () => {
-        const deleteButton = document.getElementById("delete-account-button");
-        
-        deleteButton.addEventListener("click", () => {
-            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-                auth.deleteAccount(); // Call the deleteAccount method from auth.js
-            }
+            const deleteButton = document.getElementById("delete-account-button");
+
+            deleteButton.addEventListener("click", () => {
+                // if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                if (confirm(messages.deleteAccountConfirmation)) {
+                    auth.deleteAccount(); // Call the deleteAccount method from auth.js
+                }
+            });
         });
-    });
 
 
-    document.addEventListener('DOMContentLoaded', () => {
-    const updateNameButton = document.getElementById("update-name-button");
-    const newNameInput = document.getElementById("new-name");
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateNameButton = document.getElementById("update-name-button");
+            const newNameInput = document.getElementById("new-name");
 
-    updateNameButton.addEventListener("click", async () => {
-        const newName = newNameInput.value.trim();
-        if (newName) {
-            const updated = await auth.updateName(newName);
-            if (updated) {
-                // Update the name displayed on the profile
-                document.getElementById("user-name").textContent = newName;
-            }
-        } else {
-            alert("Please enter a valid name.");
-        }
-    });
-});
-
-
-       
+            updateNameButton.addEventListener("click", async () => {
+                const newName = newNameInput.value.trim();
+                if (newName) {
+                    const updated = await auth.updateName(newName);
+                    if (updated) {
+                        // Update the name displayed on the profile
+                        document.getElementById("user-name").textContent = newName;
+                    }
+                } else {
+                    // alert("Please enter a valid name.");
+                    alert(messages.invalidNameError);
+                }
+            });
+        }); 
     </script>
 
 </head>
 
 <body>
-   
+
     <nav id="navbar">
         <ul>
             <li><a href="landing.html">Home</a></li>

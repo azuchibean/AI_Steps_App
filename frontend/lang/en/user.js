@@ -1,4 +1,31 @@
 const messages = {
+    // app.js
+    loggingIn: "Logging in...",
+    loginSuccess: "Login successful!",
+    loginFailure: "Login failed.",
+    registering: "Registering...",
+    registerSuccess: "Registration successful!",
+    registerFailure: "Registration failed.",
+    sendingResetLink: "Sending reset link...",
+    resetLinkSent: "Reset link sent! Check your email.",
+    resetLinkFailure: "Failed to send reset link.",
+    resetPasswordSuccess: "Password reset successful!",
+    genericErrorMessage: (errorDetail) => `Error: ${errorDetail}`,
+
+    // Profile
+    deleteAccountConfirmation: "Are you sure you want to delete your account? This action cannot be undone.",
+    invalidNameError: "Please enter a valid name.",
+
+    // auth.js
+    logoutFailure: "Logout failed. Please try again.",
+    logoutError: "An error occurred during logout. Please try again.",
+    deleteAccountFailure: "Failed to delete account. Please try again.",
+    deleteAccountError: "An error occurred while deleting your account. Please try again.",
+    updateNameSuccess: "Name updated successfully!",
+    updateNameErrorDetail: (detail) => `Error updating name: ${detail}`,
+    genericError: "An error occurred. Please try again.",
+
+    //Admin page
     adminPageMessage: 'Welcome, Admin!',
     endpointStatistics: 'Endpoint Statistics',
     landingPageMessage: 'Landing Page',
@@ -7,6 +34,7 @@ const messages = {
     freeCallsRemainingMessage: (freeCallsRemaining) => `Free Calls Remaining: ${freeCallsRemaining}`,
     errormessage: 'Error loading API usage data. Please try again.',
 
+    //Landing page
     apiUsageTitle: "API Usage",
     userInputTitle: "User Input",
     userSelectionTitle: "Your Selection",
