@@ -9,22 +9,22 @@ load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 API = os.getenv("GOOGLE_API")
 
-# Supported types: https://developers.google.com/maps/documentation/places/web-service/supported_types
-def location_finder(latitude, longitude, height, steps, type):
+def location_finder(user_latitude, user_longitude, user_height, steps_to_take, place_type):
+    """
+    Finds top three locations sorted according to Google Maps Rating that closely meet step count.
+    """
     try:
-        # Calculate stride length and use to find distance
-        stride_length = height/100 * 0.4
-        radius = stride_length * steps
+        # Stride length formula found online
+        stride_length = user_height/100 * 0.4
 
-        # Actual radius because google maps only finds locations within the radius set
-        desired_radius = radius - 100
+        # Add 100 meters to search locations slightly further than search radius
+        search_radius = stride_length * steps_to_take + 100
 
-        # Define parameters for the API request
         params = {
-            "location": f"{latitude},{longitude}",
-            "radius": radius,
+            "location": f"{user_latitude},{user_longitude}",
+            "radius": search_radius,
             "key": API_KEY,
-            "type": type,  # e.g., restaurant, park, bus_station, etc.
+            "type": place_type,
         }
 
         # Make the API request
@@ -41,7 +41,7 @@ def location_finder(latitude, longitude, height, steps, type):
 
         # Process the results
         places_within_radius = filter_places_by_radius(
-            (latitude, longitude), data, desired_radius
+            (user_latitude, user_longitude), data, search_radius
         )
 
         places_json_list = []

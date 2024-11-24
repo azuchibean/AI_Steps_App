@@ -110,7 +110,7 @@ async def get_current_user(request: Request):
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to my FastAPI application!"}
+    return {"message": "My app is running!"}
 
 # Register endpoint
 @app.post("/register")
@@ -189,8 +189,6 @@ async def login(request: LoginRequest, response: Response):
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
 
-
-
 # Verify token endpoint
 @app.get("/verify-token")
 async def verify_token(current_user: dict = Depends(get_current_user)):
@@ -203,9 +201,6 @@ async def verify_token(current_user: dict = Depends(get_current_user)):
         "total_api_calls": current_user.get("total_api_calls", 0),
         "first_name": current_user.get("first_name", "")
     }
-    
-   
-
 
 def send_reset_email(email: str, reset_link: str):
     response = requests.post(
