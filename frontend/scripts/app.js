@@ -1,5 +1,5 @@
-// const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
-const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
+const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
+//const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
 // Load Login Page Content
 function loadLoginPageContent() {
@@ -85,81 +85,6 @@ function loadRegisterPageContent() {
     }
 }
 
-// Load Forgot Password Page Content
-function loadForgotPasswordPageContent() {
-    const forgotPasswordForm = document.getElementById("forgotPasswordForm");
-    if (forgotPasswordForm) {
-        forgotPasswordForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            const email = document.getElementById("forgotEmail").value;
-            const messageElement = document.getElementById("forgotPasswordMessage");
-
-            messageElement.textContent = "Sending reset link...";
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/request-password-reset`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email }),
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    messageElement.style.color = "green";
-                    messageElement.textContent = "Reset link sent! Check your email.";
-                } else {
-                    throw new Error(data.detail || "Failed to send reset link.");
-                }
-            } catch (error) {
-                messageElement.style.color = "red";
-                messageElement.textContent = error.message;
-            }
-        });
-    }
-}
-
-// Load Reset Password Page Content
-function loadResetPasswordPageContent() {
-    const resetForm = document.getElementById("resetForm");
-    if (resetForm) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-
-        resetForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            const newPassword = document.getElementById("newPassword").value;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/reset-password`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        token: token,
-                        new_password: newPassword,
-                    }),
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    alert("Password reset successful!");
-                    window.location.href = "login.html";
-                } else {
-                    alert("Error: " + data.detail);
-                }
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        });
-    }
-}
-
-
 
 // On Page Load: Check URL and Load Relevant Page Content
 document.addEventListener("DOMContentLoaded", () => {
@@ -170,10 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
         loadLoginPageContent();
     } else if (pathname.endsWith("register.html")) {
         loadRegisterPageContent();
-    } else if (pathname.endsWith("forgot-password.html")) {
-        loadForgotPasswordPageContent();
-    } else if (pathname.endsWith("reset-password.html")) {
-        loadResetPasswordPageContent();
-    }
+    } 
     
 });
