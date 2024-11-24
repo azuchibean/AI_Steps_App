@@ -92,7 +92,7 @@ function loadForgotPasswordPageContent() {
         forgotPasswordForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            const email = document.getElementById("email").value;
+            const email = document.getElementById("forgotEmail").value;
             const messageElement = document.getElementById("forgotPasswordMessage");
 
             messageElement.textContent = "Sending reset link...";
