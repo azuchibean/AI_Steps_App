@@ -72,6 +72,7 @@ def get_user_by_email(connection, email):
         return user
     except Error as e:
         print("Error retrieving user by email:", e)
+        connection.rollback()
         return None
     finally:
         cursor.close()
@@ -139,6 +140,7 @@ def get_endpoint_stats_from_db(connection):
 
         return stats 
     except Exception as e:
+        connection.rollback()
         raise HTTPException(status_code=500, detail=f"Error fetching endpoint stats: {e}")
     finally:
         cursor.close()
@@ -203,6 +205,7 @@ def get_api_usage_data(connection):
         return result
     except Error as e:
         print("Error fetching API usage data:", e)
+        connection.rollback()
         return []
     finally:
         cursor.close()
@@ -238,6 +241,7 @@ def get_api_usage_data_for_user(connection, user_id):
             "warning": None
         }
     except Error as e:
+        connection.rollback()
         print("Error fetching API usage data for user:", e)
         return {
             "llm_api_calls": 0,

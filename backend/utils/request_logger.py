@@ -27,6 +27,7 @@ async def log_endpoint_stats(request: Request):
         connection.commit()
     except Exception as e:
         print(f"Error logging request to database: {e}")
+        connection.rollback()
     finally:
         cursor.close()
         close_db_connection(connection)
@@ -41,6 +42,7 @@ async def update_user_api_usage(user_id):
     try:
         cursor = connection.cursor()
 
+        connection.start_transaction()
         # Update the `api_usage` table for the specific user
         query = """
         INSERT INTO api_usage (user_id, total_api_calls)
@@ -52,6 +54,7 @@ async def update_user_api_usage(user_id):
 
     except Exception as e:
         print(f"Error updating `api_usage` table: {e}")
+        connection.rollback()
     finally:
         cursor.close()
         close_db_connection(connection)
@@ -59,8 +62,10 @@ async def update_user_api_usage(user_id):
 async def update_llm_api_calls(user_id:int):
     """Update the llm_api_calls for a user in the api_usage table"""
     connection = get_db_connection()
-    cursor = connection.cursor()
     try:
+        cursor = connection.cursor()
+        connection.start_transaction()
+        
         update_query = """
         UPDATE api_usage 
         SET llm_api_calls = llm_api_calls + 1
@@ -69,7 +74,7 @@ async def update_llm_api_calls(user_id:int):
         cursor.execute(update_query, (user_id,))
         connection.commit()
         print(f"LLM API calls updated for user_id {user_id}")
-    except Error as e:
+    except Exception as e:
         print("Error updating LLM API calls:", e)
         connection.rollback()
     finally:
