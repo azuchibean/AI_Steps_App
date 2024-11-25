@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, PasswordResetRequest, PasswordReset
+from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, PasswordResetRequest, PasswordReset, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
 from datetime import timedelta
@@ -334,8 +334,12 @@ async def verify_token(current_user: dict = Depends(get_current_user)):
         "first_name": current_user.get("first_name", "")
     }
 
-
-@app.get("/api/v1/stats/endpoints")
+# Retrieve stats for all API endpoints
+@app.get("/api/v1/stats/endpoints",
+         response_model=EndpointStatsListResponse,
+         summary="Get endpoint usage statistics",
+         description="Retrieve statistics for all API endpoints, including HTTP method, endpoint path, and usage count."
+        )
 async def get_endpoint_stats():
     """Endpoint to get the count of all endpoints."""
     # Connect to the database
@@ -344,9 +348,14 @@ async def get_endpoint_stats():
         raise HTTPException(status_code=500, detail="Database connection failed")
     
     result = get_endpoint_stats_from_db(db)
-    return result
+    return {"endpoints": result}
 
-@app.get("/api/v1/stats/apiUsage")
+# Retrieve stats of api usages of all users
+@app.get("/api/v1/stats/apiUsage",
+         response_model=ApiUsageListResponse,
+         summary="Get API usage statistics for all users",
+         description="Retrieve statistics for API usage by all users, including their total API calls.",
+        )
 async def usage_data():
     """Endpoint to get the api usage of all users."""
     # Connect to the database
@@ -355,9 +364,14 @@ async def usage_data():
         raise HTTPException(status_code=500, detail="Database connection failed")
     
     result = get_api_usage_data(db)
-    return result 
+    return {"users": result} 
 
-@app.get("/api/v1/stats/apiUsage/{user_id}")
+# Retrieve stats of api usage from a specific user given the user_id
+@app.get("/api/v1/stats/apiUsage/{user_id}",
+         response_model=ApiUsageForUserResponse,
+         summary="Get API usage statistics for a specific user",
+         description="Retrieve the API usage statistics for a specific user by user ID, including total API calls."
+        )
 async def usage_data_for_user(user_id: int):
     """Endpoint to get the API usage for a specific user."""
     # Connect to the database
