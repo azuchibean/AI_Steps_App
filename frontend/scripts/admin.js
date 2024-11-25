@@ -34,7 +34,7 @@ async function loadEndpointStats() {
         });
 
         const endpointStats = await endpointStatsResponse.json();
-        console.log(endpointStats)
+        console.log("endpoint stats:" + endpointStats)
         renderEndpointStats(endpointStats); //call render to display data
 
     } catch (error) {

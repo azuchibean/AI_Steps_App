@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class RegisterRequest(BaseModel):
     first_name: str
@@ -99,3 +99,75 @@ class LocationDetailsResponse(BaseModel):
                 }
             }
         }
+
+class EndpointStatsResponse(BaseModel):
+    method: str
+    endpoint: str
+    count: int
+
+class EndpointStatsListResponse(BaseModel):
+    endpoints: List[EndpointStatsResponse]
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "endpoints": [
+                    {
+                    "method": "POST",
+                    "endpoint": "/api/v1/register",
+                    "count": 9
+                    },
+                    {
+                    "method": "POST",
+                    "endpoint": "/api/v1/login",
+                    "count": 54
+                    },
+                    {
+                    "method": "GET",
+                    "endpoint": "/api/v1/stats/apiUsage",
+                    "count": 80
+                    },
+                ]
+            }
+        }
+
+
+class ApiUsageResponse(BaseModel):
+    first_name: str
+    email: str
+    total_api_calls: int
+    
+class ApiUsageListResponse(BaseModel):
+    users: List[ApiUsageResponse]
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "users": [
+                    {"first_name": "bob", "email": "bob@gmail.com", "total_api_calls": 53},
+                    {"first_name": "angela", "email": "angela@gmail.com", "total_api_calls": 11}
+                ]
+            }
+        }
+
+class ApiUsageForUserResponse(BaseModel):
+    id: int
+    user_id: int
+    total_api_calls: int
+    llm_api_calls: int
+    warning: Optional[str] = None
+    free_calls_remaining: int
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "user_id": 1,
+                "total_api_calls": 233,
+                "llm_api_calls": 0,
+                "warning": None,
+                "free_calls_remaining": 20
+            }
+        }
+    
+
