@@ -34,8 +34,8 @@ async function loadEndpointStats() {
         });
 
         const endpointStats = await endpointStatsResponse.json();
-        console.log("endpoint stats:" + endpointStats)
-        renderEndpointStats(endpointStats); //call render to display data
+        // console.log("endpoint stats:" + endpointStats)
+        renderEndpointStats(endpointStats["endpoints"]); //call render to display data
 
     } catch (error) {
         console.error("Error loading endpoint stats content:", error);
@@ -70,8 +70,8 @@ async function loadApiUsageStats(){
         });
 
         const apiUsageStats = await apiUsageStatsResponse.json();
-        console.log(apiUsageStats);
-        renderApiUsageStats(apiUsageStats);  // Call render function to display the data
+        // console.log(apiUsageStats["users"]);
+        renderApiUsageStats(apiUsageStats["users"]);  // Call render function to display the data
 
     } catch (error) {
         console.error("Error loading API usage stats content:", error);
