@@ -131,7 +131,6 @@ class Auth {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
-                alert(messages.updateNameSuccess);
                 return true;
             } else {
                 const error = await response.json();
