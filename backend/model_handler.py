@@ -15,9 +15,8 @@ def llm_run(latitude, longitude, height, steps, location_type):
     api_results = location_finder(latitude, longitude, height, steps, location_type)
 
     if not api_results:
-        raise ValueError(
-            "No results found from location_finder. Please check the inputs."
-        )
+        print("No results available from API.")
+        return {"api_response":[], "llm_recommendation":""}
 
     # LLM model
     model_id = "deepset/roberta-base-squad2"

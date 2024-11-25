@@ -316,7 +316,7 @@ async def llm_start(request: LocationDetails):
     steps = request.steps
     location_type = request.location_type
 
-    response = llm_run(latitude, longitude, height, steps, location_type)  
+    response = llm_run(latitude, longitude, height, steps, location_type) 
 
     return {"response": response}
 
