@@ -247,6 +247,9 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
     user = get_user_by_email(db, request.email)
     close_db_connection(db)
 
+    print(user)
+    print(request.email)
+
     if not user:
         raise HTTPException(status_code=404, detail="Email not found")
 
