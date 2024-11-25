@@ -6,12 +6,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from utils.models.models import LocationDetails, RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
-from utils.auth_utils import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM, RESET_PASSWORD_SECRET_KEY, create_password_reset_token, MAILGUN_API_KEY, MAILGUN_DOMAIN,SENDER_EMAIL
+from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
 from datetime import timedelta
 import requests 
 from utils.request_logger import log_endpoint_stats, update_user_api_usage, update_llm_api_calls
 from model_handler import llm_run
-import html
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY") 
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+RESET_PASSWORD_SECRET_KEY = os.getenv("RESET_PASSWORD_SECRET_KEY")
+MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY") 
+MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN") 
 
 app = FastAPI()
 
@@ -24,7 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# log api call
+# Logs API calls
 @app.middleware("http")
 async def log_request_and_update_usage(request: Request, call_next):
     """
@@ -273,10 +284,7 @@ async def reset_password(request: PasswordReset):
 
     return {"message": "Password has been reset successfully"}
 
-# Parameters: latitude, longitude, height of person in cm, steps desired, and location_type
-# Supported types: https://developers.google.com/maps/documentation/places/web-service/supported_types
-# Returns json with two fields: api_response and llm_response. api_response has three objects, while llm_response is response chosen by llm.
-# Add text to highlight the one chosen by llm as "recommended" when display on front-end
+# LLM endpoint
 @app.post("/api/v1/llm")
 async def llm_start(request: LocationDetails):
     latitude = request.latitude
@@ -289,6 +297,7 @@ async def llm_start(request: LocationDetails):
 
     return {"response": response}
 
+# Logout endpoint
 @app.post("/api/v1/logout")
 async def logout(response: Response):
     response.delete_cookie("access_token")

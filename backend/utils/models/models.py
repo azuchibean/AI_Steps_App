@@ -1,5 +1,3 @@
-#temp name for this file
-
 from pydantic import BaseModel
 
 class RegisterRequest(BaseModel):
