@@ -6,6 +6,25 @@ class RegisterRequest(BaseModel):
     email: str
     password: str
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "first_name": "Victor",
+                "email": "victorfung@example.com",
+                "password": "$2b$12$eIX6Oa1hXoJb7S5C7EqOiEM4Txp06hz9P8zoN7dTFSdIjHp51sbQm"
+            }
+        }
+        
+class RegisterResponse(BaseModel):
+    message: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "User registered successfully!"
+            }
+        }
+
 class LoginRequest(BaseModel):
     email: str
     password: str

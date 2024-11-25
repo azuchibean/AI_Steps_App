@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
+from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, PasswordResetRequest, PasswordReset
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
 from datetime import timedelta
@@ -68,8 +68,10 @@ async def log_request_and_update_usage(request: Request, call_next):
     return response
 
 
-# Preflight Handler 
-@app.options("/{path:path}")
+# Preflight handler 
+@app.options("/{path:path}",
+    summary="Preflight request handler",
+    description="Handles preflight requests for CORS by responding with a 200 status code.")
 async def preflight_handler():
     return Response(status_code=200)
 
@@ -77,7 +79,7 @@ async def preflight_handler():
 # Define the OAuth2PasswordBearer scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# Define the function to retrieve the current user 
+# Retrieves the current user 
 async def get_current_user(request: Request):
     
     # Extract the token from the cookie
@@ -119,13 +121,19 @@ async def get_current_user(request: Request):
     return user
 
 
-# Root endpoint
-@app.get("/")
+@app.get(
+    "/",
+    summary="Root/health check endpoint",
+    description="This endpoint serves as a health check to indicate that the application is running. It returns a simple JSON message."
+)
 async def read_root():
-    return {"message": "My app is running!"}
+    return {"message": "This response means that the app is running."}
 
-# Register endpoint
-@app.post("/api/v1/register")
+
+@app.post("/api/v1/register", 
+    response_model=RegisterResponse,
+    summary="Register a new user", 
+    description="This endpoint registers a new user by accepting user details such as first name, email, and password. It checks for an existing user and hashes the password before storing it.")
 async def register_user(request: RegisterRequest):
      # Connect to the database
     db = get_db_connection()
@@ -285,7 +293,9 @@ async def reset_password(request: PasswordReset):
     return {"message": "Password has been reset successfully"}
 
 # LLM endpoint
-@app.post("/api/v1/llm", response_model=LocationDetailsResponse, summary="Posts user location, details, and desired location type to LLM.", description="This endpoint returns a response that contains a processed Places API response and the LLM's recommendation response.")
+@app.post("/api/v1/llm", response_model=LocationDetailsResponse, 
+    summary="Posts user location, details, and desired location type to LLM.", 
+    description="This endpoint returns a response that contains a processed Places API response and the LLM's recommendation response.")
 async def llm_start(request: LocationDetails):
     latitude = request.latitude
     longitude = request.longitude
