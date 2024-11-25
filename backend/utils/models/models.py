@@ -9,8 +9,8 @@ class RegisterRequest(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "first_name": "Victor",
-                "email": "victorfung@example.com",
+                "first_name": "John",
+                "email": "user@example.com",
                 "password": "12345678"
             }
         }
@@ -50,12 +50,80 @@ class LoginResponse(BaseModel):
             }
         }
 
+class LogoutResponse(BaseModel):
+    message: str
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Logged out successfully"
+            }
+        }
+
 class PasswordResetRequest(BaseModel):
     email: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "user@example.com"
+            }
+        }
+
+class PasswordResetRequestResponse(BaseModel):
+    message: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Password reset link has been sent to your email"
+            }
+        }
 
 class PasswordReset(BaseModel):
     token: str
     new_password: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "token": "example-reset-token",
+                "new_password":"password"
+            }
+        }
+
+class PasswordResetResponse(BaseModel):
+    message: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Password has been reset successfully"
+            }
+        }
+
+class VerifyTokenResponse(BaseModel):
+    message: str
+    user_id: int
+    user: str
+    isAdmin: int
+    free_api_calls_remaining: int
+    total_api_calls: int
+    first_name: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Token is valid",
+                "user_id": 123,
+                "user": "user@example.com",
+                "isAdmin": 1,
+                "free_api_calls_remaining": 19,
+                "total_api_calls": 1,
+                "first_name": "John"
+            }
+        }
+
 
 class LocationDetails(BaseModel):
     latitude: float

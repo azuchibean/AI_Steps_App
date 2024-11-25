@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, PasswordResetRequest, PasswordReset, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
+from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, LogoutResponse, PasswordResetRequest, PasswordResetRequestResponse, PasswordReset, PasswordResetResponse, VerifyTokenResponse, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user, update_user_name
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token, send_reset_email
 from datetime import timedelta
@@ -190,7 +190,7 @@ async def register_user(request: RegisterRequest):
 
 @app.post("/api/v1/login", 
     response_model=LoginResponse, 
-    summary="Login to the application", 
+    summary="Login user into application", 
     description="This endpoint authenticates the user and returns a JWT token in a secure HTTP-only cookie.")
 async def login(request: LoginRequest, response: Response):
     # Connect to the database
@@ -229,15 +229,20 @@ async def login(request: LoginRequest, response: Response):
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
 
-# Logout endpoint
-@app.post("/api/v1/logout")
+
+@app.post("/api/v1/logout", 
+    response_model = LogoutResponse,
+    summary="Log user out of application",
+    description="This endpoint logs out the user by deleting the JWT token from the HTTP-only cookie.")
 async def logout(response: Response):
     response.delete_cookie("access_token")
     return {"message": "Logged out successfully"}
 
 
-
-@app.post("/api/v1/request-password-reset")
+@app.post("/api/v1/request-password-reset", 
+    response_model = PasswordResetRequestResponse,
+    summary="Request a password reset",
+    description="This endpoint sends a password reset link to the user's email.")
 async def request_password_reset(request: PasswordResetRequest, background_tasks: BackgroundTasks):
     # Verify if the email exists in the database
     db = get_db_connection()
@@ -257,7 +262,10 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
     return {"message": "Password reset link has been sent to your email"}
 
 
-@app.post("/api/v1/reset-password")
+@app.post("/api/v1/reset-password", 
+    response_model = PasswordResetResponse,
+    summary="Reset user password",
+    description="This endpoint resets the user's password using a valid token and new password.")
 async def reset_password(request: PasswordReset):
     try:
         # Decode the token
@@ -276,7 +284,7 @@ async def reset_password(request: PasswordReset):
         raise HTTPException(status_code=404, detail="User not found")
 
     hashed_password = hash_password(request.new_password)
-    update_user_password(db, email, hashed_password)  # Implement this function to update the user's password
+    update_user_password(db, email, hashed_password)
     close_db_connection(db)
 
     return {"message": "Password has been reset successfully"}
@@ -298,7 +306,10 @@ async def llm_start(request: LocationDetails):
 
 
 # Verify token endpoint
-@app.get("/api/v1/verify-token")
+@app.get("/api/v1/verify-token", 
+    response_model = VerifyTokenResponse,
+    summary="Verify if the token is valid and retrieve user information",
+    description="This endpoint verifies the validity of the current user's token and returns related user information.")
 async def verify_token(current_user: dict = Depends(get_current_user)):
     return {
         "message": "Token is valid",
