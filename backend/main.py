@@ -120,6 +120,25 @@ async def get_current_user(request: Request):
         )
     return user
 
+# Creates tables on start up if they don't exist
+@app.on_event("startup")
+async def on_startup():
+    db = get_db_connection()
+    if db is None:
+        print("Failed to connect to database.")
+        return
+
+    try:
+        create_user_table(db)
+        create_endpoint_table(db)
+        create_api_usage_table(db)
+
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+    finally:
+        close_db_connection(db) 
+
 
 @app.get(
     "/",
@@ -209,18 +228,12 @@ async def login(request: LoginRequest, response: Response):
 
     return {"message": "Login successful", "isAdmin": user.get("is_admin")}
 
-# Verify token endpoint
-@app.get("/api/v1/verify-token")
-async def verify_token(current_user: dict = Depends(get_current_user)):
-    return {
-        "message": "Token is valid",
-        "user_id": current_user["id"],
-        "user": current_user["email"],
-        "isAdmin": current_user.get("is_admin", 0),  
-        "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
-        "total_api_calls": current_user.get("total_api_calls", 0),
-        "first_name": current_user.get("first_name", "")
-    }
+# Logout endpoint
+@app.post("/api/v1/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out successfully"}
+
 
 def send_reset_email(email: str, reset_link: str):
     
@@ -307,11 +320,19 @@ async def llm_start(request: LocationDetails):
 
     return {"response": response}
 
-# Logout endpoint
-@app.post("/api/v1/logout")
-async def logout(response: Response):
-    response.delete_cookie("access_token")
-    return {"message": "Logged out successfully"}
+
+# Verify token endpoint
+@app.get("/api/v1/verify-token")
+async def verify_token(current_user: dict = Depends(get_current_user)):
+    return {
+        "message": "Token is valid",
+        "user_id": current_user["id"],
+        "user": current_user["email"],
+        "isAdmin": current_user.get("is_admin", 0),  
+        "free_api_calls_remaining": current_user.get("free_api_calls_remaining", 0) ,
+        "total_api_calls": current_user.get("total_api_calls", 0),
+        "first_name": current_user.get("first_name", "")
+    }
 
 
 @app.get("/api/v1/stats/endpoints")
@@ -350,25 +371,30 @@ async def usage_data_for_user(user_id: int):
     return result
 
 
-#Creates tables if it doesn't exist ON START UP
-@app.on_event("startup")
-async def on_startup():
+@app.put("/api/v1/update-name")
+async def update_name(new_name: str = Body(..., embed=True), current_user: dict = Depends(get_current_user)):
+    """
+    Updates the user's name in the database.
+    """
+    user_id = current_user["id"]
+    
+    # Connect to the database
     db = get_db_connection()
-    if db is None:
-        print("Failed to connect to database.")
-        return
-
+    if not db:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+    
     try:
-        create_user_table(db)
-        create_endpoint_table(db)
-        create_api_usage_table(db)
-        
-
+        # Update the user's name in the database
+        cursor = db.cursor()
+        update_query = "UPDATE users SET first_name = %s WHERE id = %s"
+        cursor.execute(update_query, (new_name, user_id))
+        db.commit()
+        return {"message": "Name updated successfully"}
     except Error as e:
-        print(f"The error '{e}' occurred")
-
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error updating name: {e}")
     finally:
-        close_db_connection(db) 
+        close_db_connection(db)
 
 
 @app.delete("/api/v1/delete-account")
@@ -392,32 +418,5 @@ async def delete_account(response: Response, current_user: dict = Depends(get_cu
             raise HTTPException(status_code=500, detail="Failed to delete account")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        close_db_connection(db)
-
-
-
-@app.put("/api/v1/update-name")
-async def update_name(new_name: str = Body(..., embed=True), current_user: dict = Depends(get_current_user)):
-    """
-    Updates the user's name in the database.
-    """
-    user_id = current_user["id"]
-    
-    # Connect to the database
-    db = get_db_connection()
-    if not db:
-        raise HTTPException(status_code=500, detail="Database connection failed")
-    
-    try:
-        # Update the user's name in the database
-        cursor = db.cursor()
-        update_query = "UPDATE users SET first_name = %s WHERE id = %s"
-        cursor.execute(update_query, (new_name, user_id))
-        db.commit()
-        return {"message": "Name updated successfully"}
-    except Error as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating name: {e}")
     finally:
         close_db_connection(db)
