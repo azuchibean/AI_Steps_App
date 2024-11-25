@@ -50,15 +50,16 @@ function setupEventListeners() {
             alert(messages.updateNameSuccess);
         }
     });
-
-    // Delete Account Button
-    const deleteAccountButton = document.getElementById('delete-account-button');
-    deleteAccountButton.addEventListener('click', async () => {
-        if (confirm(messages.deleteAccountConfirmation)) {
-            const success = await auth.deleteAccount();
-            if (success) {
-                alert(messages.deleteAccountSuccess);
-            }
-        }
-    });
 }
+
+        // Delete Account Button
+        const deleteAccountButton = document.getElementById('delete-account-button');
+        deleteAccountButton.addEventListener('click', async () => {
+            if (confirm(messages.deleteAccountConfirmation)) {
+                const success = await auth.deleteAccount();
+                if (success) {
+                    alert(messages.deleteAccountSuccess);
+                }
+            }
+        });
+    
