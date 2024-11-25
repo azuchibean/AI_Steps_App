@@ -1,6 +1,27 @@
 const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
 
+// Load Index Page Content
+function loadIndexPageContent() {
+    // Set the welcome header text
+    const welcomeHeader = document.getElementById("welcome-header");
+    if (welcomeHeader) {
+        welcomeHeader.textContent = messages.welcomeHeader;
+    }
+
+    // Set the first welcome description
+    const welcomeDescription1 = document.getElementById("welcome-description1");
+    if (welcomeDescription1) {
+        welcomeDescription1.textContent = messages.welcomeDescription1;
+    }
+
+    // Set the second welcome description (HTML content)
+    const welcomeDescription2 = document.getElementById("welcome-description2");
+    if (welcomeDescription2) {
+        welcomeDescription2.innerHTML = messages.welcomeDescription2; // Use innerHTML for content with links
+    }
+}
+
 
 // Load Login Page Content
 function loadLoginPageContent() {
@@ -102,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loadLoginPageContent();
     } else if (pathname.endsWith("register.html")) {
         loadRegisterPageContent();
-    } 
-    
+    } else if (pathname.endsWith("index.html") || pathname === "/") {
+        loadIndexPageContent();
+    }
 });

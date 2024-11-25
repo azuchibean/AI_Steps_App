@@ -15,7 +15,7 @@ def location_finder(user_latitude, user_longitude, user_height, steps_to_take, p
     """
     try:
         # Stride length formula found online
-        stride_length = user_height/100 * 0.4
+        stride_length = user_height//100 * 0.4
 
         # Add 100 meters to search locations slightly further than search radius
         search_radius = stride_length * steps_to_take + 100

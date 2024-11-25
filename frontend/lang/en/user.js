@@ -1,4 +1,9 @@
 const messages = {
+    // index.html
+    welcomeHeader: "Welcome to the Steps App",
+    welcomeDescription1: "Discover an AI-powered fitness experience tailored to your needs! Our app suggests unique destinations to walk to based on your current location and preferred distance.",
+    welcomeDescription2: "Powered by advanced machine learning models like <a href='https://huggingface.co/deepset/roberta-base-squad2' target='_blank'>RoBERTa-base-SQuAD2</a>, we make fitness fun, intelligent, and personalized.",
+
     // app.js
     loggingIn: "Logging in...",
     loginFailure: "Login failed.",

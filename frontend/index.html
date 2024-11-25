@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,8 @@
     <script src="./scripts/app.js" defer></script>
 </head>
 
-  <!-- Navbar -->
-  <nav id="navbar">
+<!-- Navbar -->
+<nav id="navbar">
     <ul>
         <li><button class="nav-button" onclick="navigateTo('login.html')">Login</button></li>
         <li><button class="nav-button" onclick="navigateTo('register.html')">Register</button></li>
@@ -18,24 +19,18 @@
 </nav>
 
 
-    <!-- Main Content -->
-    <main>
-        <!-- Label Container -->
-        <div class="label-container">
-            <h1>Welcome to the Steps App</h1>
-        </div>
+<!-- Main Content -->
+<main>
+    <!-- Label Container -->
+    <div class="label-container">
+        <h1 id="welcome-header"></h1>
+    </div>
 
-        <!-- Description Container -->
-        <div class="description-container">
-            <p>
-                Discover an AI-powered fitness experience tailored to your needs! 
-                Our app suggests unique destinations to walk to based on your current location and preferred distance.
-            </p>
-            <p>
-                Powered by advanced machine learning models like 
-                <a href="https://huggingface.co/deepset/roberta-base-squad2" target="_blank">RoBERTa-base-SQuAD2</a>, 
-                we make fitness fun, intelligent, and personalized.
-            </p>
-        </div>
-    </main>
+    <!-- Description Container -->
+    <div class="description-container">
+        <p id="welcome-description1"></p>
+        <p id="welcome-description2"></p>
+    </div>
+</main>
+
 </html>
