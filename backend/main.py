@@ -5,8 +5,8 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, PasswordResetRequest, PasswordReset, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
-from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
-from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
+from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user, update_user_name
+from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token, send_reset_email
 from datetime import timedelta
 import requests 
 from utils.request_logger import log_endpoint_stats, update_user_api_usage, update_llm_api_calls
@@ -236,31 +236,6 @@ async def logout(response: Response):
     return {"message": "Logged out successfully"}
 
 
-def send_reset_email(email: str, reset_link: str):
-    
-
-    html_content = f"""
-    <html>
-        <body>
-         <p>We received a request to reset your password. Please click the link below to reset your password:</p>
-         <p><a href="{reset_link}" style="color: #0066cc; text-decoration: underline;">{reset_link}</a></p>
-        </body>
-    </html>
-
-    """
-
-    response = requests.post(
-    f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
-    auth=("api", MAILGUN_API_KEY),
-    data={
-        "from": f"Your App <mailgun@{MAILGUN_DOMAIN}>",
-        "to": email,
-        "subject": "Password Reset Request",
-        "html": html_content  
-        }
-    )
-
-
 
 @app.post("/api/v1/request-password-reset")
 async def request_password_reset(request: PasswordResetRequest, background_tasks: BackgroundTasks):
@@ -399,15 +374,12 @@ async def update_name(new_name: str = Body(..., embed=True), current_user: dict 
         raise HTTPException(status_code=500, detail="Database connection failed")
     
     try:
-        # Update the user's name in the database
-        cursor = db.cursor()
-        update_query = "UPDATE users SET first_name = %s WHERE id = %s"
-        cursor.execute(update_query, (new_name, user_id))
-        db.commit()
+        # Use the function from db_connection.py to update the name
+        success = update_user_name(db, user_id, new_name)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to update name")
+        
         return {"message": "Name updated successfully"}
-    except Error as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating name: {e}")
     finally:
         close_db_connection(db)
 
