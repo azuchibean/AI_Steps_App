@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, LogoutResponse, PasswordResetRequest, PasswordResetRequestResponse, PasswordReset, PasswordResetResponse, VerifyTokenResponse, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
+from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, LogoutResponse, PasswordResetRequest, PasswordResetRequestResponse, PasswordReset, PasswordResetResponse, VerifyTokenResponse, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse, DeleteAccountResponse, UpdateNameResponse
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user, update_user_name
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token, send_reset_email
 from datetime import timedelta
@@ -371,8 +371,11 @@ async def usage_data_for_user(user_id: int):
         raise HTTPException(status_code=404, detail="User not found or no API usage data available")
     return result
 
-
-@app.put("/api/v1/update-name")
+# Updates the user's name 
+@app.put("/api/v1/update-name",
+         response_model=UpdateNameResponse,
+         summary="Updates the user's name in the database",
+         description="Allows the user to update their name. The new name should be provided in the request body.")
 async def update_name(new_name: str = Body(..., embed=True), current_user: dict = Depends(get_current_user)):
     """
     Updates the user's name in the database.
@@ -394,8 +397,11 @@ async def update_name(new_name: str = Body(..., embed=True), current_user: dict 
     finally:
         close_db_connection(db)
 
-
-@app.delete("/api/v1/delete-account")
+# Deletes the user's account
+@app.delete("/api/v1/delete-account",
+            response_model=DeleteAccountResponse,
+            summary="Deletes the user's account from the database",
+            description="Allows the user to permanently delete their account.")
 async def delete_account(response: Response, current_user: dict = Depends(get_current_user)):
     # Get the user's ID from the current_user
     user_id = current_user["id"]

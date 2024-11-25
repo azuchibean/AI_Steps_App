@@ -259,4 +259,22 @@ class ApiUsageForUserResponse(BaseModel):
             }
         }
     
+class UpdateNameResponse(BaseModel):
+    message: str
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Name updated successfully"
+            }
+        }
 
+class DeleteAccountResponse(BaseModel):
+    message: str
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Account deleted successfully"
+            }
+        }
