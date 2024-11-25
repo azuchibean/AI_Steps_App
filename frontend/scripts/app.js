@@ -1,6 +1,5 @@
 const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
-
 // Load Index Page Content
 function loadIndexPageContent() {
     // Set the welcome header text
