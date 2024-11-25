@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from utils.models.models import LocationDetails, RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
+from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, LoginRequest, PasswordResetRequest, PasswordReset
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
 from datetime import timedelta
@@ -285,7 +285,7 @@ async def reset_password(request: PasswordReset):
     return {"message": "Password has been reset successfully"}
 
 # LLM endpoint
-@app.post("/api/v1/llm")
+@app.post("/api/v1/llm", response_model=LocationDetailsResponse, summary="Posts user location, details, and desired location type to LLM.", description="This endpoint returns a response that contains a processed Places API response and the LLM's recommendation response.")
 async def llm_start(request: LocationDetails):
     latitude = request.latitude
     longitude = request.longitude

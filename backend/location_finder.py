@@ -29,7 +29,7 @@ def location_finder(user_latitude, user_longitude, user_height, steps_to_take, p
 
         # Make the API request
         response = requests.get(API, params=params)
-        response.raise_for_status()  # Raise an HTTPError for bad responses (4xx or 5xx)
+        response.raise_for_status()  # Raise an HTTPError
 
         # Parse the response JSON
         data = response.json()
