@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, PasswordResetRequest, PasswordReset
-from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
+from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user, update_user_name
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
 from datetime import timedelta
 import requests 
@@ -384,15 +384,12 @@ async def update_name(new_name: str = Body(..., embed=True), current_user: dict 
         raise HTTPException(status_code=500, detail="Database connection failed")
     
     try:
-        # Update the user's name in the database
-        cursor = db.cursor()
-        update_query = "UPDATE users SET first_name = %s WHERE id = %s"
-        cursor.execute(update_query, (new_name, user_id))
-        db.commit()
+        # Use the function from db_connection.py to update the name
+        success = update_user_name(db, user_id, new_name)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to update name")
+        
         return {"message": "Name updated successfully"}
-    except Error as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating name: {e}")
     finally:
         close_db_connection(db)
 

@@ -251,6 +251,24 @@ def get_api_usage_data_for_user(connection, user_id):
         cursor.close()
 
 
+def update_user_name(connection, user_id, new_name):
+    """
+    Updates the user's name in the database.
+    """
+    cursor = connection.cursor()
+    try:
+        update_query = "UPDATE users SET first_name = %s WHERE id = %s"
+        cursor.execute(update_query, (new_name, user_id))
+        connection.commit()
+        return True
+    except Error as e:
+        print(f"Error updating name for user_id {user_id}: {e}")
+        connection.rollback()
+        return False
+    finally:
+        cursor.close()
+
+
 def delete_user(connection, user_id):
     """Deletes a user from the database."""
     cursor = connection.cursor()
