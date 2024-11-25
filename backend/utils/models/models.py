@@ -11,7 +11,7 @@ class RegisterRequest(BaseModel):
             "example": {
                 "first_name": "Victor",
                 "email": "victorfung@example.com",
-                "password": "$2b$12$eIX6Oa1hXoJb7S5C7EqOiEM4Txp06hz9P8zoN7dTFSdIjHp51sbQm"
+                "password": "12345678"
             }
         }
         
@@ -28,6 +28,27 @@ class RegisterResponse(BaseModel):
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "Login successful",
+                "password": "12345678"
+            }
+        }
+
+
+class LoginResponse(BaseModel):
+    message: str
+    isAdmin: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Login successful",
+                "isAdmin": 0
+            }
+        }
 
 class PasswordResetRequest(BaseModel):
     email: str

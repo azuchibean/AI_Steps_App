@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, PasswordResetRequest, PasswordReset, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
+from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, PasswordResetRequest, PasswordReset, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token
 from datetime import timedelta
@@ -188,9 +188,10 @@ async def register_user(request: RegisterRequest):
     return {"message": "User registered successfully!"}
 
 
-
-# Login endpoint
-@app.post("/api/v1/login")
+@app.post("/api/v1/login", 
+    response_model=LoginResponse, 
+    summary="Login to the application", 
+    description="This endpoint authenticates the user and returns a JWT token in a secure HTTP-only cookie.")
 async def login(request: LoginRequest, response: Response):
     # Connect to the database
     db = get_db_connection()
