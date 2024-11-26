@@ -31,8 +31,6 @@ function loadLandingPageContent(userData) {
     // Load Section 2: User Input
     const userInputSection = document.getElementById("user-input-section");
     loadInteractiveComponents(userData, userInputSection);
-
-    console.log("Landing page content loaded successfully!");
 }
 
 async function loadConsumptionData(userId, apiUsageSection) {
@@ -168,9 +166,6 @@ async function loadInteractiveComponents(userData, userInputSection) {
             return;
         }
 
-        // Now the heightInput is valid, and you can safely use it
-        console.log("Validated height:", parseInt(heightInput));
-
 
         const requestData = {
             steps: selectedSteps,
@@ -180,8 +175,6 @@ async function loadInteractiveComponents(userData, userInputSection) {
             height: parseFloat(heightInput),
             // userLocation,
         };
-
-        console.log("Request Data:", requestData);
 
         // Section 3: Display the user selections
         const userSelectionDisplay = document.getElementById("user-selection");
@@ -271,7 +264,6 @@ async function generate_llm_message2(requestData) {
         }
 
         const data = await response.json();
-        console.log("LLM Response Data:", data);
         return data.response; // Adjust this based on the actual API's response structure
     } catch (error) {
         console.error("Error generating LLM message:", error);

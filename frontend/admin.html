@@ -11,17 +11,18 @@
 
     <script type="module">
         import auth from './scripts/auth.js';
-        
+
         // Verify token and check admin status
         auth.verifyTokenAndRoute('admin').then(userData => {
-            if (userData) {
-                // Initialize your admin page content here
-                console.log('Admin verified, proceeding with page load');
+            if (!userData) {
+                console.error("Failed to retrieve user data or unauthorized access.");
+                return; // Stop further execution if user data is invalid
             }
         });   
     </script>
-    
+
 </head>
+
 <body>
 
     <nav id="navbar">
@@ -73,7 +74,7 @@
 
     <script src="./scripts/app.js"></script>
     <script src="./scripts/admin.js"></script>
-    
+
 </body>
 
 </html>
