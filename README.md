@@ -24,10 +24,6 @@ It is recommended to use a virtual environment to manage dependencies.
   ```
 
 ### 2. Dependency Management
-- After installing any new dependencies, update the `requirements.txt` file:
-  ```bash
-  pip freeze > requirements.txt
-  ```
 - To install dependencies from `requirements.txt` (ensure the virtual environment is activated):
   ```bash
   pip install -r requirements.txt
@@ -66,47 +62,9 @@ Below are the key libraries used in this project along with their purposes:
 | `passlib`                | Manages multiple password hashing algorithms.          |
 | `bcrypt`                 | For secure password hashing.                           |
 | `python-jose`            | JSON Web Token (JWT) support for authentication.       |
-| `accelerate`             | Optimizes performance for distributed processing.      |
-| `annotated-types`        | Provides type annotations for enhanced type checking and validation.                        |
-| `anyio`                  | A compatibility layer for asynchronous Python libraries.                                    |
-| `certifi`                | Provides secure SSL/TLS certificates.                                                       |
-| `cffi`                   | A Foreign Function Interface for calling C code from Python.                                |
-| `charset-normalizer`     | Detects and normalizes character encodings in text data.                                    |
-| `click`                  | A library for creating command-line interfaces.                                             |
-| `colorama`               | Enables cross-platform colored terminal text.                                               |
 | `cryptography`           | Provides cryptographic recipes and primitives.                                              |
-| `ecdsa`                  | Implements elliptic curve cryptography.                                                     |
-| `filelock`               | A cross-platform file locking mechanism.                                                    |
-| `fsspec`                 | File system specification for reading/writing data.                                         |
-| `geographiclib`          | Geodetic calculations and utilities.                                                        |
 | `geopy`                  | Geocoding and geographical calculations.                                                    |
-| `h11`                    | An HTTP/1.1 protocol implementation.                                                        |
-| `huggingface-hub`        | Tools for interacting with Hugging Face's model repository.                                 |
-| `idna`                   | Handles internationalized domain names.                                                     |
-| `Jinja2`                 | A template engine for Python.                                                               |
-| `MarkupSafe`             | Provides safeguards against code injection in templates.                                     |
-| `mpmath`                 | Library for arbitrary-precision arithmetic.                                                 |
-| `networkx`               | Tools for creating and analyzing complex networks/graphs.                                    |
-| `numpy`                  | A library for numerical computing in Python.                                                |
-| `packaging`              | Utilities for packaging and dependency management.                                           |
-| `psutil`                 | Utilities for accessing system and process information.                                      |
-| `pyasn1`                 | ASN.1 data structures support for Python.                                                   |
-| `pycparser`              | A parser for C code, used in `cffi`.                                                        |
 | `pydantic`               | Data validation and parsing using Python type hints.                                        |
-| `pydantic_core`          | Optimized core for `pydantic`.                                                              |
-| `PyYAML`                 | Reads and writes YAML files.                                                                |
-| `regex`                  | Provides enhanced regular expression capabilities.                                          |
-| `rsa`                    | Implements the RSA encryption algorithm.                                                    |
-| `safetensors`            | Loads tensor data in a secure format.                                                       |
-| `six`                    | Provides compatibility between Python 2 and 3.                                              |
-| `sniffio`                | Detects the async library in use.                                                           |
-| `starlette`              | ASGI framework used by FastAPI.                                                             |
-| `sympy`                  | A library for symbolic mathematics.                                                         |
-| `tokenizers`             | Tokenization tools for machine learning models.                                             |
-| `tqdm`                   | Displays progress bars in Python loops.                                                     |
-| `typing_extensions`      | Backported features for type hints.                                                         |
-| `urllib3`                | A robust HTTP library for Python.                                                           |
-
 ---
 
 ## API Documentation

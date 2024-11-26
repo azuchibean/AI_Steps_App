@@ -7,7 +7,6 @@ from utils.models.models import LocationDetails, LocationDetailsResponse, Regist
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user, update_user_name
 from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token, send_reset_email, get_current_user
 from datetime import timedelta
-import requests 
 from utils.request_logger import log_endpoint_stats, update_user_api_usage, update_llm_api_calls
 from model_handler import llm_run
 from dotenv import load_dotenv
@@ -204,9 +203,6 @@ async def request_password_reset(request: PasswordResetRequest, background_tasks
 
     if not user:
         raise HTTPException(status_code=404, detail="Email not found")
-    
-    print(user)
-    print(request.email)
 
     # Generate the password reset token
     token = create_password_reset_token(request.email)

@@ -70,7 +70,7 @@ def send_reset_email(email: str, reset_link: str):
         }
     )
 
-    if response.status_code == 200:  # Mailgun typically returns 200 for success
+    if response.status_code == 200: 
         print("Email sent successfully!")
     else:
         print(f"Failed to send email. Status code: {response.status_code}")
