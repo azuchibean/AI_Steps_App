@@ -1,10 +1,13 @@
 import os
 from dotenv import load_dotenv
+from fastapi import HTTPException, status, Request
 from datetime import timedelta
-from jose import jwt
+from jose import jwt, JWTError
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 import requests
+from utils.db_connection import get_db_connection, close_db_connection, get_user_by_email
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -74,3 +77,46 @@ def send_reset_email(email: str, reset_link: str):
         print(f"Response: {response.text}")
         
     return response
+
+
+
+# Retrieves the current user 
+async def get_current_user(request: Request):
+    
+    # Extract the token from the cookie
+    token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication credentials were not provided",
+        )
+
+    try:
+        # Decode the JWT token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+
+
+        if email is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+            )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+        )
+
+    # Connect to the database and retrieve the user
+    db = get_db_connection()
+    user = get_user_by_email(db, email)
+    close_db_connection(db)
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
+    return user

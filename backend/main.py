@@ -1,12 +1,11 @@
 # API server is here
 from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks, Response, Request, Body
 from fastapi.responses import Response
-from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from utils.models.models import LocationDetails, LocationDetailsResponse, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, LogoutResponse, PasswordResetRequest, PasswordResetRequestResponse, PasswordReset, PasswordResetResponse, VerifyTokenResponse, EndpointStatsListResponse, ApiUsageListResponse, ApiUsageForUserResponse, DeleteAccountResponse, UpdateNameResponse
 from utils.db_connection import get_db_connection, close_db_connection, create_user_table, insert_user, get_user_by_email, update_user_password, create_endpoint_table, get_endpoint_stats_from_db, create_api_usage_table, initialize_usage_record, get_api_usage_data, get_api_usage_data_for_user, delete_user, update_user_name
-from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token, send_reset_email
+from utils.auth_utils import hash_password, verify_password, create_access_token, create_password_reset_token, send_reset_email, get_current_user
 from datetime import timedelta
 import requests 
 from utils.request_logger import log_endpoint_stats, update_user_api_usage, update_llm_api_calls
@@ -27,7 +26,7 @@ app = FastAPI()
 # Configure CORS middleware to allow your frontend origin
 app.add_middleware(
     CORSMiddleware, 
-    allow_origins=["http://127.0.0.1:5500", "https://dn3aeuakeqz2h.cloudfront.net", "https://isa-frontend-285df755bfe6.herokuapp.com"],
+    allow_origins=["http://127.0.0.1:5500", "https://dn3aeuakeqz2h.cloudfront.net"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -73,50 +72,6 @@ async def log_request_and_update_usage(request: Request, call_next):
 async def preflight_handler():
     return Response(status_code=200)
 
-
-# Define the OAuth2PasswordBearer scheme
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
-# Retrieves the current user 
-async def get_current_user(request: Request):
-    
-    # Extract the token from the cookie
-    token = request.cookies.get("access_token")
-
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication credentials were not provided",
-        )
-
-    try:
-        # Decode the JWT token
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-
-
-        if email is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid authentication credentials",
-            )
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-        )
-
-    # Connect to the database and retrieve the user
-    db = get_db_connection()
-    user = get_user_by_email(db, email)
-    close_db_connection(db)
-
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
-        )
-    return user
 
 # Creates tables on start up if they don't exist
 @app.on_event("startup")
