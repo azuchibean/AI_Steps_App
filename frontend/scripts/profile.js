@@ -39,6 +39,12 @@ function setupEventListeners() {
         const newNameInput = document.getElementById('new-name');
         const newName = newNameInput.value.trim();
 
+        // Frontend validation: Check if the name contains only letters and spaces
+        if (!/^[A-Za-z\s]+$/.test(newName)) {
+            alert(messages.invalidNameFormat);
+            return;
+        }
+
         if (!newName) {
             alert(messages.invalidNameError);
             return;

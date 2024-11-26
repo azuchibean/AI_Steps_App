@@ -11,6 +11,9 @@ const messages = {
     registering: "Registering...",
     registerFailure: "Registration failed.",
     registerSuccess: "Registration successful!",
+    nameFormatError: "Name must only contain letters and spaces.",
+    passwordFormatError: "Password must be at least 3 characters long.",
+    emailFormatError: "Invalid email address.",
 
     // password.js
     sendingResetLink: "Sending reset link...",
@@ -24,6 +27,7 @@ const messages = {
     updateNameSuccess: "Name updated successfully!",
     deleteAccountConfirmation: "Are you sure you want to delete your account? This action cannot be undone.",
     deleteAccountSuccess: "Account deleted successfully!",
+    invalidNameFormat: "Invalid name. Only letters and spaces are allowed.",
 
     // auth.js
     logoutFailure: "Logout failed. Please try again.",

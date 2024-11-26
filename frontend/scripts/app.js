@@ -34,6 +34,21 @@ function loadLoginPageContent() {
             const password = document.getElementById("loginPassword").value;
             const loginMessage = document.getElementById("loginMessage");
 
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert(messages.emailFormatError);
+                return; 
+            }
+
+             // Validate password
+             if (password.length < 3) {
+                alert(messages.passwordFormatError);
+                return;
+            }
+
+
             loginMessage.textContent = messages.loggingIn;
 
             try {
@@ -78,6 +93,27 @@ function loadRegisterPageContent() {
             const email = document.getElementById("registerEmail").value;
             const password = document.getElementById("registerPassword").value;
             const registerMessage = document.getElementById("registerMessage");
+
+
+            // Validate name
+            if (!/^[A-Za-z\s]+$/.test(firstName)) {
+                alert(messages.nameFormatError);
+                return;
+            }
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert(messages.emailFormatError);
+                return; // Stop submission
+            }
+
+
+            // Validate password
+            if (password.length < 3) {
+                alert(messages.passwordFormatError);
+                return;
+            }
 
             registerMessage.textContent = messages.registering;
 

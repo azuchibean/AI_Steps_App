@@ -11,6 +11,13 @@ function loadForgotPasswordPageContent() {
             const messageElement = document.getElementById("forgotPasswordMessage");
             messageElement.textContent = messages.sendingResetLink;
 
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert(messages.emailFormatError);
+                return; // Stop submission
+            }
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/api/v1/request-password-reset`, {
                     method: "POST",
@@ -46,6 +53,13 @@ function loadResetPasswordPageContent() {
             event.preventDefault();
             
             const newPassword = document.getElementById("resetNewPassword").value;
+
+             // Validate password
+             if (newPassword.length < 3) {
+                alert(messages.passwordFormatError);
+                return;
+            }
+
 
             try {
                 const response = await fetch(`${API_BASE_URL}/api/v1/reset-password`, {
