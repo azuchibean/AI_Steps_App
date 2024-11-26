@@ -34,7 +34,6 @@ async function loadEndpointStats() {
         });
 
         const endpointStats = await endpointStatsResponse.json();
-        // console.log("endpoint stats:" + endpointStats)
         renderEndpointStats(endpointStats["endpoints"]); //call render to display data
 
     } catch (error) {
@@ -70,7 +69,6 @@ async function loadApiUsageStats(){
         });
 
         const apiUsageStats = await apiUsageStatsResponse.json();
-        // console.log(apiUsageStats["users"]);
         renderApiUsageStats(apiUsageStats["users"]);  // Call render function to display the data
 
     } catch (error) {
@@ -113,5 +111,4 @@ function hideLoadingApi() {
 
 document.addEventListener("DOMContentLoaded", function () {
     loadAdminPageContent();
-    console.log("loading admin page content");
 });

@@ -9,7 +9,6 @@ class Auth {
     initializeLogout() {
         const logoutButton = document.getElementById("logout-button");
         if (logoutButton) {
-            console.log("Logout button found");
             logoutButton.removeEventListener("click", this.handleLogout);
             logoutButton.addEventListener("click", this.handleLogout);
         }
@@ -18,7 +17,6 @@ class Auth {
     // Handle logout functionality
     handleLogout = async (event) => {
         event.preventDefault();
-        console.log("Logout initiated");
         
         try {
             const response = await fetch(`${API_BASE_URL}/api/v1/logout`, {
@@ -31,7 +29,6 @@ class Auth {
             });
 
             if (response.ok) {
-                console.log("Logout successful");
                 window.location.href = "login.html";
             } else {
                 console.error("Logout failed:", response.statusText);
@@ -55,17 +52,14 @@ class Auth {
             });
     
             if (!response.ok) {
-                console.log("Token verification failed");
                 window.location.href = "login.html";
                 return null;
             }
     
             const userData = await response.json();
-            console.log("User data:", userData);
     
             // Handle admin-only pages
             if (requiredRole === 'admin' && !userData.isAdmin) {
-                console.log("Admin access required but user is not admin");
                 window.location.href = "landing.html";
                 return null;
             }
@@ -74,7 +68,6 @@ class Auth {
             if (requiredRole === 'user' && userData.isAdmin) {
                 const currentPage = window.location.pathname.split("/").pop();
                 if (currentPage !== "profile.html") {
-                    console.log("User is admin, redirecting to admin page");
                     window.location.href = "admin.html";
                     return null;
                 }
@@ -100,7 +93,6 @@ class Auth {
             });
     
             if (response.ok) {
-                console.log("Account deleted successfully");
                 window.location.href = "login.html";
                 return true;
             } else {
@@ -130,7 +122,6 @@ class Auth {
     
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.message);
                 return true;
             } else {
                 const error = await response.json();
