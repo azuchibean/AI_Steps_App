@@ -66,4 +66,11 @@ def send_reset_email(email: str, reset_link: str):
             "html": html_content  
         }
     )
+
+    if response.status_code == 200:  # Mailgun typically returns 200 for success
+        print("Email sent successfully!")
+    else:
+        print(f"Failed to send email. Status code: {response.status_code}")
+        print(f"Response: {response.text}")
+        
     return response
