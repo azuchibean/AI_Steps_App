@@ -1,5 +1,5 @@
 
-# ISA Final Project
+# AI Steps App
 
 This repository contains the final project for ISA, which involves building an API server using FastAPI. The project is designed with modularity and efficiency in mind, leveraging popular libraries and frameworks.
 
